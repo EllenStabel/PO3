@@ -1,5 +1,78 @@
-MainWidget:
+StackLayoutExample:
 
+
+<StackLayoutExample>:
+    # left-right top-bottom
+    # orientation: "lr-tb"
+    # padding: ("20dp", "20dp", "20dp", "20dp")
+    # spacing: "20dp", "20dp"
+
+
+<GridLayoutExample@GridLayout>:
+    # rows
+    # cols
+    rows: 2
+    Button:
+        text: 'A'
+        size_hint: None, 1
+        width: "60dp"
+    BoxLayoutExample:
+    Button:
+        text: 'C'
+    Button:
+        text: 'D'
+        size_hint: None, 1
+        width: "60dp"
+    Button
+        text: 'E'
+    Button:
+        text: 'F'
+
+
+
+<AnchorLayoutExample>:
+    # right, left, center
+    anchor_x: "center"
+    # bottom, top, center
+    anchor_y: "top"
+
+    BoxLayout:
+        size_hint: .2, .2
+        Button:
+            text: 'A'
+        Button:
+            text: 'B'
+
+
+
+<BoxLayoutExample>:
+    Button:
+        text: 'A'
+
+        size_hint: 0.5, 0.5
+
+        # size_hint: None, None
+        # width: "100dp"
+        # height: "60dp"
+
+        # x, center_x, right
+        # y, center_y, top
+
+        pos_hint: {"center_y": 0.5}
+
+    BoxLayout
+        orientation: 'vertical'
+        spacing: '10dp'
+        Button:
+            text: 'B1'
+        Button:
+            text: 'B2'
+        Button:
+            text: 'B3'
+        Button:
+            text: 'B4'
+    Label:
+        text: 'C'
 
 
 <MainWidget>:
