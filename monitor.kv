@@ -1,4 +1,50 @@
-StackLayoutExample:
+WidgetsExample:
+
+
+<WidgetsExample@GridLayout>:
+    cols: 3
+    ToggleButton:
+        text: 'toggle'
+        on_state: root.on_toggle_button_state(self)
+        size_hint: None, 1
+        width: "100dp"
+    Button:
+        text: "Count"
+        on_press: root.on_button_click()
+        disabled: not root.count_enabled
+    Label:
+        text: root.my_text
+        # font_name: "map/naam_bestand"
+        # font_size: "80dp"
+        color: 1, .5, 1, 1
+    Switch:
+        on_active: root.on_switch_active(self)
+        size_hint: None, 1
+        width: "100dp"
+    Slider:
+        id: my_slider
+        min: 0
+        max: 100
+        value: 50
+        # on_value: root.on_slider_value(self)
+        orientation: "vertical"
+    Label:
+        # text: root.slider_value_txt
+        text: str(int(my_slider.value))
+
+
+
+<PageLayoutExample@PageLayout>:
+    MainWidget:
+    BoxLayoutExample:
+    AnchorLayoutExample:
+    GridLayoutExample:
+
+
+<ScrollViewExample@ScrollView>:
+    StackLayoutExample:
+        size_hint: 1, None
+        height: self.minimum_height
 
 
 <StackLayoutExample>:
@@ -60,7 +106,7 @@ StackLayoutExample:
 
         pos_hint: {"center_y": 0.5}
 
-    BoxLayout
+    BoxLayout:
         orientation: 'vertical'
         spacing: '10dp'
         Button:
