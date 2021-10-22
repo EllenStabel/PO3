@@ -3,7 +3,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 
-
+"""
 class TitleScreen(Screen):
     pass
 
@@ -22,13 +22,14 @@ class PPGScreen(Screen):
 
 class EDAScreen(Screen):
     pass
-
+"""
 
 class MainWidget(Widget):
     pass
 
 
 class FilterApp(App):
+    """
     def build(self):
         # Create the screen manager
         sm = ScreenManager()
@@ -38,5 +39,7 @@ class FilterApp(App):
         sm.add_widget(PPGScreen(name='PPG'))
         sm.add_widget(EDAScreen(name='EDA'))
         return sm
+    """
+    pass
 
 FilterApp().run()
