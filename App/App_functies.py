@@ -34,8 +34,18 @@ class BoxLayoutExample(BoxLayout):
     pass
 
 
+class ScreenManagement(ScreenManager):
+    pass
+
+
+bestand = Builder.load_file("filter.kv")
+
+
 class FilterApp(App):
+
     def build(self):
+        return bestand
+"""
         sm = ScreenManager()
         sm.add_widget(TitleScreen(name='title'))
         sm.add_widget(MainScreen(name='main'))
@@ -43,6 +53,6 @@ class FilterApp(App):
         sm.add_widget(PPGScreen(name='PPG'))
         sm.add_widget(EDAScreen(name='EDA'))
         return sm
-
+"""
 
 FilterApp().run()

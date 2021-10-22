@@ -1,26 +1,23 @@
-TitleScreen:
+ScreenManagement:
+    transition: SlideTransition(direction='left')
+    TitleScreen:
+    MainScreen:
+    ECGScreen:
+    PPGScreen:
+    EDAScreen:
 
 
 <TitleScreen>
-
-
+    name: 'title'
     Button:
         text: 'Thuiszorgmonitor'
-
         size_hint: 0.5, 0.5
-
-        # size_hint: None, None
-        # width: "100dp"
-        # height: "60dp"
-
-        # x, center_x, right
-        # y, center_y, top
-
         pos_hint: {"center_y": 0.5, "center_x":0.5}
         on_press: root.manager.current = 'main'
 
 
 <MainScreen>
+    name: 'main'
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -47,6 +44,7 @@ TitleScreen:
 
 
 <ECGScreen>
+    name: 'ECG'
     Label:
         text: 'ECG'
         size: "100dp","100dp"
@@ -62,6 +60,7 @@ TitleScreen:
             root.manager.current = 'main'
 
 <PPGScreen>
+    name: 'PPG'
     Label:
         text: 'PPG'
         size: "100dp","100dp"
@@ -75,6 +74,7 @@ TitleScreen:
         on_press: root.manager.current = 'main'
 
 <EDAScreen>
+    name: 'EDA'
     Label:
         text: 'EDA'
         size: "100dp","100dp"
