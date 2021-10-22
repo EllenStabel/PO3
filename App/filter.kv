@@ -24,19 +24,26 @@ TitleScreen:
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
-
             orientation: 'horizontal'
-        spacing: '10dp'
-        Button:
-            text: 'ECG'
-        Button:
-            text: 'PPG'
-        Button:
-            text: 'EDA'
-
-    Label:
-        text: 'C'
-
+            Label:
+                text: 'ECG'
+            Button:
+                text: 'waarde ECG'
+                on_press: root.manager.current = 'ECG'
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text: 'PPG'
+            Button:
+                text: 'waarde PPG'
+                on_press: root.manager.current = 'PPG'
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text: 'EDA'
+            Button:
+                text: 'waarde EDA'
+                on_press: root.manager.current = 'EDA'
 
 
 <ECGScreen>
