@@ -6,8 +6,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 
 
-
-
 class TitleScreen(Screen):
     pass
 
@@ -31,14 +29,13 @@ class EDAScreen(Screen):
 class MainWidget(Widget):
     pass
 
+
 class BoxLayoutExample(BoxLayout):
     pass
 
 
 class FilterApp(App):
-
     def build(self):
-        # Create the screen manager
         sm = ScreenManager()
         sm.add_widget(TitleScreen(name='title'))
         sm.add_widget(MainScreen(name='main'))
@@ -46,7 +43,7 @@ class FilterApp(App):
         sm.add_widget(PPGScreen(name='PPG'))
         sm.add_widget(EDAScreen(name='EDA'))
         return sm
-
     pass
+
 
 FilterApp().run()
