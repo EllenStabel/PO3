@@ -57,7 +57,9 @@ TitleScreen:
         text: "Overzicht"
         size_hint: 0.1, 0.1
         pos_hint: {"left":1, "top":1}
-        on_press: root.manager.current = 'main'
+        on_press:
+            # root.transition = SlideTransition(direction='right')
+            root.manager.current = 'main'
 
 <PPGScreen>
     Label:
