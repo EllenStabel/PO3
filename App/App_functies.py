@@ -43,7 +43,7 @@ class FilterApp(App):
         sm.add_widget(PPGScreen(name='PPG'))
         sm.add_widget(EDAScreen(name='EDA'))
         return sm
-    pass
+
 
 
 FilterApp().run()
