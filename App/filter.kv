@@ -53,6 +53,11 @@ TitleScreen:
         font_size: "50dp"
         pos_hint: {"center_y": 0.9}
         color: 1, 1, 1, 1
+    Button:
+        text: "Overzicht"
+        size_hint: 0.1, 0.1
+        pos_hint: {"left":1, "top":1}
+        on_press: root.manager.current = 'main'
 
 <PPGScreen>
     Label:
@@ -61,6 +66,11 @@ TitleScreen:
         font_size: "50dp"
         pos_hint: {"center_y": 0.9}
         color: 1, 1, 1, 1
+    Button:
+        text: "Overzicht"
+        size_hint: 0.1, 0.1
+        pos_hint: {"left":1, "top":1}
+        on_press: root.manager.current = 'main'
 
 <EDAScreen>
     Label:
@@ -69,4 +79,9 @@ TitleScreen:
         font_size: "50dp"
         pos_hint: {"center_y": 0.9}
         color: 1, 1, 1, 1
+    Button:
+        text: "Overzicht"
+        size_hint: 0.1, 0.1
+        pos_hint: {"left":1, "top":1}
+        on_press: root.manager.current = 'main'
 
