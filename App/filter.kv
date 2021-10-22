@@ -2,15 +2,10 @@ TitleScreen:
 
 
 <TitleScreen>
-    Label:
-        text: 'Thuiszorgmonitor'
-        size: '300dp', '300dp'
-        pos: 100, 200
-        color: 0.9, 0, 0.5, 1
 
 
     Button:
-        text: 'Verder naar app'
+        text: 'Thuiszorgmonitor'
 
         size_hint: 0.5, 0.5
 
@@ -26,6 +21,22 @@ TitleScreen:
 
 
 <MainScreen>
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+
+            orientation: 'horizontal'
+        spacing: '10dp'
+        Button:
+            text: 'ECG'
+        Button:
+            text: 'PPG'
+        Button:
+            text: 'EDA'
+
+    Label:
+        text: 'C'
+
 
 
 <ECGScreen>
