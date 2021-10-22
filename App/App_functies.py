@@ -45,5 +45,4 @@ class FilterApp(App):
         return sm
 
 
-
 FilterApp().run()
