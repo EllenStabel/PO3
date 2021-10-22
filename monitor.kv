@@ -24,7 +24,7 @@ WidgetsExample:
         text: "Count"
         on_press: root.on_button_click()
         disabled: not root.count_enabled
-    Label:
+    Label:f
         text: root.my_text
         # font_name: "map/naam_bestand"
         # font_size: "80dp"
@@ -163,5 +163,5 @@ WidgetsExample:
     Label:
         text: 'Hello'
         size: '100dp', '80dp'
-        pos: 200, 300
+        pos_hint: {"center_y": 0.5}
         color: 0.9, 0, 0.5, 1
