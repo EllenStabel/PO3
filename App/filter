@@ -1,4 +1,4 @@
-TitleScreen:
+MainWidget:
 
 
 <TitleScreen>
@@ -19,3 +19,15 @@ TitleScreen:
 
 <EDAScreen>
 
+<MainWidget>:
+    Button:
+        text: 'Hello'
+        size: '40dp', '40dp'
+        pos: 100, 200
+        color: 0, 0.4, 1, 1
+
+    Label:
+        text: 'Hello'
+        size: '100dp', '80dp'
+        pos: 200, 300
+        color: 0.9, 0, 0.5, 1
