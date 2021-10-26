@@ -58,6 +58,21 @@ ScreenManagement:
         on_press:
             # root.transition = SlideTransition(direction='right')
             root.manager.current = 'main'
+    AnchorLayoutECG:
+
+
+<AnchorLayoutECG@AnchorLayout>:
+    anchor_x: "center"
+    anchor_y: "center"
+    BoxLayout:
+        size_hint: 1, .5
+        Label:
+            text: 'Waarde ECG'
+            size_hint: 0.2, 1
+        Label:
+            text: 'Grafiek'
+            size_hint: 0.8, 1
+
 
 <PPGScreen>
     name: 'PPG'
@@ -72,6 +87,19 @@ ScreenManagement:
         size_hint: 0.1, 0.1
         pos_hint: {"left":1, "top":1}
         on_press: root.manager.current = 'main'
+    AnchorLayoutPPG:
+
+<AnchorLayoutPPG@AnchorLayout>:
+    anchor_x: "center"
+    anchor_y: "center"
+    BoxLayout:
+        size_hint: 1, .5
+        Label:
+            text: 'Waarde PPG'
+            size_hint: 0.2, 1
+        Label:
+            text: 'Grafiek'
+            size_hint: 0.8, 1
 
 <EDAScreen>
     name: 'EDA'
@@ -86,4 +114,16 @@ ScreenManagement:
         size_hint: 0.1, 0.1
         pos_hint: {"left":1, "top":1}
         on_press: root.manager.current = 'main'
+    AnchorLayoutEDA:
 
+<AnchorLayoutEDA@AnchorLayout>:
+    anchor_x: "center"
+    anchor_y: "center"
+    BoxLayout:
+        size_hint: 1, .5
+        Label:
+            text: 'Waarde EDA'
+            size_hint: 0.2, 1
+        Label:
+            text: 'Grafiek'
+            size_hint: 0.8, 1
