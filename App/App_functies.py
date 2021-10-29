@@ -8,6 +8,7 @@ from kivy.uix.button import Button
 
 # eng = matlab.engine.start_matlab()
 
+
 class TitleScreen(Screen):
     pass
 
@@ -28,14 +29,6 @@ class EDAScreen(Screen):
     pass
 
 
-class MainWidget(Widget):
-    pass
-
-
-class BoxLayoutExample(BoxLayout):
-    pass
-
-
 class ScreenManagement(ScreenManager):
     pass
 
@@ -47,14 +40,6 @@ class FilterApp(App):
 
     def build(self):
         return bestand
-"""
-        sm = ScreenManager()
-        sm.add_widget(TitleScreen(name='title'))
-        sm.add_widget(MainScreen(name='main'))
-        sm.add_widget(ECGScreen(name='ECG'))
-        sm.add_widget(PPGScreen(name='PPG'))
-        sm.add_widget(EDAScreen(name='EDA'))
-        return sm
-"""
+
 
 FilterApp().run()
