@@ -22,7 +22,9 @@ ScreenManagement:
         text: 'Stressmonitor'
         size_hint: 0.5, 0.5
         pos_hint: {"center_y": 0.5, "center_x":0.5}
-        on_press: root.manager.current = 'main'
+        on_press:
+            root.manager.current = 'main'
+            root.manager.transition.direction = 'left'
 
 
 
@@ -45,7 +47,9 @@ ScreenManagement:
                 text: 'ECG'
             Button:
                 text: 'waarde ECG'
-                on_press: root.manager.current = 'ECG'
+                on_press:
+                    root.manager.current = 'ECG'
+                    root.manager.transition.direction = 'left'
 
         BoxLayout:
             orientation: 'horizontal'
@@ -53,14 +57,18 @@ ScreenManagement:
                 text: 'PPG'
             Button:
                 text: 'waarde PPG'
-                on_press: root.manager.current = 'PPG'
+                on_press:
+                    root.manager.current = 'PPG'
+                    root.manager.transition.direction = 'left'
         BoxLayout:
             orientation: 'horizontal'
             Label:
                 text: 'EDA'
             Button:
                 text: 'waarde EDA'
-                on_press: root.manager.current = 'EDA'
+                on_press:
+                    root.manager.current = 'EDA'
+                    root.manager.transition.direction = 'left'
 
 
 <ECGScreen>
@@ -83,7 +91,7 @@ ScreenManagement:
         size_hint: 0.1, 0.1
         pos_hint: {"left":1, "top":1}
         on_press:
-            # root.transition = SlideTransition(direction='right')
+            root.manager.transition.direction = 'right'
             root.manager.current = 'main'
     AnchorLayoutECG:
 
@@ -121,7 +129,9 @@ ScreenManagement:
         text: "Overzicht"
         size_hint: 0.1, 0.1
         pos_hint: {"left":1, "top":1}
-        on_press: root.manager.current = 'main'
+        on_press:
+            root.manager.current = 'main'
+            root.manager.transition.direction = 'right'
     AnchorLayoutPPG:
 
 <AnchorLayoutPPG@AnchorLayout>:
@@ -155,7 +165,9 @@ ScreenManagement:
         text: "Overzicht"
         size_hint: 0.1, 0.1
         pos_hint: {"left":1, "top":1}
-        on_press: root.manager.current = 'main'
+        on_press:
+            root.manager.current = 'main'
+            root.manager.transition.direction = 'right'
 
     Button:
         text: "Ontspannen"
