@@ -16,6 +16,7 @@ class MainScreen(Screen):
 
 
 class ECGScreen(Screen):
+    print("hello")
     pass
 
 
