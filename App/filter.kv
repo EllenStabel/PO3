@@ -12,7 +12,7 @@ ScreenManagement:
         Rectangle:
             pos: self.pos
             size: self.size
-            source: ''
+            source: 'fotoapp.jpeg'
 
     Button:
         text: 'Stressmonitor'
@@ -22,10 +22,6 @@ ScreenManagement:
         on_press:
             root.manager.current = 'main'
             root.manager.transition.direction = 'left'
-
-
-
-
 
 
 <MainScreen>
@@ -103,13 +99,21 @@ ScreenManagement:
         font_size: "50dp"
         pos_hint: {"center_y": 0.9}
         color: 1, 1, 1, 1
-    Button:
-        text: "Overzicht"
+    BoxLayout:
         size_hint: 0.1, 0.1
         pos_hint: {"left":1, "top":1}
-        on_press:
-            root.manager.transition.direction = 'right'
-            root.manager.current = 'main'
+        Image:
+            source: 'terugknop.png'
+            size_hint: (0.2, 1)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        Button:
+            text: "Overzicht"
+            background_color: 1, 1, 1, 0
+            size_hint: (0.8, 1)
+            pos_hint: {"left":1, "top":1}
+            on_press:
+                root.manager.current = 'main'
+                root.manager.transition.direction = 'right'
     AnchorLayoutECG:
 
 
@@ -142,13 +146,21 @@ ScreenManagement:
         font_size: "50dp"
         pos_hint: {"center_y": 0.9}
         color: 1, 1, 1, 1
-    Button:
-        text: "Overzicht"
+    BoxLayout:
         size_hint: 0.1, 0.1
         pos_hint: {"left":1, "top":1}
-        on_press:
-            root.manager.current = 'main'
-            root.manager.transition.direction = 'right'
+        Image:
+            source: 'terugknop.png'
+            size_hint: (0.2, 1)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        Button:
+            text: "Overzicht"
+            background_color: 1, 1, 1, 0
+            size_hint: (0.8, 1)
+            pos_hint: {"left":1, "top":1}
+            on_press:
+                root.manager.current = 'main'
+                root.manager.transition.direction = 'right'
     AnchorLayoutPPG:
 
 <AnchorLayoutPPG@AnchorLayout>:
@@ -178,14 +190,22 @@ ScreenManagement:
         font_size: "50dp"
         pos_hint: {"center_y": 0.9}
         color: 1, 1, 1, 1
-    Button:
-        text: "Overzicht"
+
+    BoxLayout:
         size_hint: 0.1, 0.1
         pos_hint: {"left":1, "top":1}
-        on_press:
-            root.manager.current = 'main'
-            root.manager.transition.direction = 'right'
-
+        Image:
+            source: 'terugknop.png'
+            size_hint: (0.2, 1)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        Button:
+            text: "Overzicht"
+            background_color: 1, 1, 1, 0
+            size_hint: (0.8, 1)
+            pos_hint: {"left":1, "top":1}
+            on_press:
+                root.manager.current = 'main'
+                root.manager.transition.direction = 'right'
     Button:
         text: "Ontspannen"
         size_hint: 0.15, 0.15
