@@ -17,7 +17,6 @@ class MainScreen(Screen):
 
 
 class ECGScreen(Screen):
-    print("hello")
     pass
 
 
@@ -35,6 +34,7 @@ class ScreenManagement(ScreenManager):
 
 class image(Image):
     pass
+
 
 
 bestand = Builder.load_file("filter.kv")

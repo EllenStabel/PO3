@@ -8,14 +8,11 @@ ScreenManagement:
 
 <TitleScreen>
     name: 'title'
-
     canvas.before:
-        Color:
-            rgb: (0, 88/255, 143/255)
-
         Rectangle:
             pos: self.pos
             size: self.size
+            source: ''
 
     Button:
         text: 'Stressmonitor'
@@ -25,6 +22,9 @@ ScreenManagement:
         on_press:
             root.manager.current = 'main'
             root.manager.transition.direction = 'left'
+
+
+
 
 
 
@@ -44,7 +44,7 @@ ScreenManagement:
         BoxLayout:
             orientation: 'horizontal'
             Image:
-                source: 'zweetdruppels.png'
+                source: 'Heart-symbol.png'
                 size_hint: (0.2, 1)
                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
@@ -53,10 +53,12 @@ ScreenManagement:
                 font_size: "50dp"
                 size_hint: (0.3, 1)
 
+
             Button:
+                size_hint: (0.5,1)
                 text: 'waarde ECG'
                 size_hint: (0.5, 1)
-                background_color: 1, 1, 1, 1
+                background_color: 1, 1, 1, 0
                 on_press:
                     root.manager.current = 'ECG'
                     root.manager.transition.direction = 'left'
@@ -66,6 +68,7 @@ ScreenManagement:
             Label:
                 text: 'PPG'
                 font_size: "50dp"
+
             Button:
                 text: 'waarde PPG'
                 background_color: 1, 1, 1, 0
