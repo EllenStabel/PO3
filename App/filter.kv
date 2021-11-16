@@ -9,6 +9,15 @@ ScreenManagement:
 
 <TitleScreen>
     name: 'title'
+
+    canvas.before:
+        Color:
+            rgb: (0, 88/255, 143/255)
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
     Button:
         text: 'Stressmonitor'
         size_hint: 0.5, 0.5
@@ -16,8 +25,18 @@ ScreenManagement:
         on_press: root.manager.current = 'main'
 
 
+
 <MainScreen>
     name: 'main'
+    canvas.before:
+        Color:
+            rgb: (0, 88/255, 143/255)
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -27,6 +46,7 @@ ScreenManagement:
             Button:
                 text: 'waarde ECG'
                 on_press: root.manager.current = 'ECG'
+
         BoxLayout:
             orientation: 'horizontal'
             Label:
@@ -45,6 +65,13 @@ ScreenManagement:
 
 <ECGScreen>
     name: 'ECG'
+    canvas.before:
+        Color:
+            rgb: (0, 88/255, 143/255)
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
     Label:
         text: 'ECG'
         size: "100dp","100dp"
@@ -77,6 +104,13 @@ ScreenManagement:
 
 <PPGScreen>
     name: 'PPG'
+    canvas.before:
+        Color:
+            rgb: (0, 88/255, 143/255)
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
     Label:
         text: 'PPG'
         size: "100dp","100dp"
@@ -104,6 +138,13 @@ ScreenManagement:
 
 <EDAScreen>
     name: 'EDA'
+    canvas.before:
+        Color:
+            rgb: (0, 88/255, 143/255)
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
     Label:
         text: 'EDA'
         size: "100dp","100dp"

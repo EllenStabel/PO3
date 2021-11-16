@@ -4,10 +4,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-# import matlab.engine
-
-# eng = matlab.engine.start_matlab()
-
+from kivy.uix.image import Image
+from kivy.core.window import Window
 
 class TitleScreen(Screen):
     pass
@@ -32,6 +30,8 @@ class EDAScreen(Screen):
 class ScreenManagement(ScreenManager):
     pass
 
+class image(Image):
+    pass
 
 bestand = Builder.load_file("filter.kv")
 
