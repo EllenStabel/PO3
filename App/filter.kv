@@ -43,12 +43,20 @@ ScreenManagement:
         orientation: 'vertical'
         BoxLayout:
             orientation: 'horizontal'
+            Image:
+                source: 'zweetdruppels.png'
+                size_hint: (0.2, 1)
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
             Label:
                 text: 'ECG'
                 font_size: "50dp"
+                size_hint: (0.3, 1)
+
             Button:
                 text: 'waarde ECG'
-                background_color: 1, 1, 1, 0
+                size_hint: (0.5, 1)
+                background_color: 1, 1, 1, 1
                 on_press:
                     root.manager.current = 'ECG'
                     root.manager.transition.direction = 'left'
