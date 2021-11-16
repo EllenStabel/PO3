@@ -39,31 +39,38 @@ ScreenManagement:
         orientation: 'vertical'
         BoxLayout:
             orientation: 'horizontal'
+            Label:
+                size_hint: (0.05,1)
             Image:
                 source: 'Heart-symbol.png'
-                size_hint: (0.2, 1)
+                size_hint: (0.1, 1)
                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                size: 10,10
 
             Label:
                 text: 'ECG'
                 font_size: "50dp"
-                size_hint: (0.3, 1)
-
-
+                size_hint: (0.35, 1)
             Button:
-                size_hint: (0.5,1)
                 text: 'waarde ECG'
-                size_hint: (0.5, 1)
                 background_color: 1, 1, 1, 0
                 on_press:
-                    root.manager.current = 'ECG'
+                    root.manager.current = 'ECGH'
                     root.manager.transition.direction = 'left'
 
         BoxLayout:
             orientation: 'horizontal'
             Label:
+                size_hint: (0.05,1)
+            Image:
+                source: 'Heart-symbol.png'
+                size_hint: (0.1, 1)
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                size: 10,10
+            Label:
                 text: 'PPG'
                 font_size: "50dp"
+                size_hint: (0.35, 1)
 
             Button:
                 text: 'waarde PPG'
@@ -74,8 +81,17 @@ ScreenManagement:
         BoxLayout:
             orientation: 'horizontal'
             Label:
+                size_hint: (0.05,1)
+            Image:
+                source: 'zweetdruppels.png'
+                size_hint: (0.1, 1)
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                size: 10,10
+
+            Label:
                 text: 'EDA'
                 font_size: "50dp"
+                size_hint: (0.35, 1)
             Button:
                 text: 'waarde EDA'
                 background_color: 1, 1, 1, 0
@@ -106,6 +122,7 @@ ScreenManagement:
             source: 'terugknop.png'
             size_hint: (0.2, 1)
             pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
         Button:
             text: "Overzicht"
             background_color: 1, 1, 1, 0
