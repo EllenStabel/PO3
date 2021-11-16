@@ -55,7 +55,7 @@ ScreenManagement:
                 text: 'waarde ECG'
                 background_color: 1, 1, 1, 0
                 on_press:
-                    root.manager.current = 'ECGH'
+                    root.manager.current = 'ECG'
                     root.manager.transition.direction = 'left'
 
         BoxLayout:
@@ -63,7 +63,7 @@ ScreenManagement:
             Label:
                 size_hint: (0.05,1)
             Image:
-                source: 'Heart-symbol.png'
+                source: 'zuurstof.png'
                 size_hint: (0.1, 1)
                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
                 size: 10,10

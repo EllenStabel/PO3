@@ -6,6 +6,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.core.window import Window
+import matplotlib.pyplot as plt
 
 
 class TitleScreen(Screen):
@@ -17,7 +18,13 @@ class MainScreen(Screen):
 
 
 class ECGScreen(Screen):
-    pass
+    def grafiek():
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        fig.show
+        return
+
+
 
 
 class PPGScreen(Screen):
@@ -34,7 +41,6 @@ class ScreenManagement(ScreenManager):
 
 class image(Image):
     pass
-
 
 
 bestand = Builder.load_file("filter.kv")
