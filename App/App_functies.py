@@ -7,6 +7,14 @@ from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.core.window import Window
 import matplotlib.pyplot as plt
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
+
+x = [1, 2, 3, 4, 5]
+y = [5, 12, 6, 9, 15]
+
+plt.plot(x, y)
+plt.xlabel("x-as")
+plt.ylabel("y-as")
 
 
 class TitleScreen(Screen):
@@ -18,13 +26,10 @@ class MainScreen(Screen):
 
 
 class ECGScreen(Screen):
-    def grafiek():
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        fig.show
-        return
-
-
+    def __init__(self, **kwargs):
+        super(ECGScreen, self).__init__(**kwargs)
+        grafiek_ecg = self.ids.grafiek_ECG
+        grafiek_ecg.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
 
 class PPGScreen(Screen):
