@@ -148,7 +148,7 @@ ScreenManagement:
     AnchorLayoutECG:
 
 
-<AnchorLayoutECG@AnchorLayout>:
+<AnchorLayoutECG>:
     anchor_x: "center"
     anchor_y: "center"
     BoxLayout:
@@ -156,9 +156,10 @@ ScreenManagement:
         Label:
             text: 'Waarde ECG'
             size_hint: 0.2, 1
-        Label:
+        BoxLayout:
+        #Label:
             id: grafiek_ECG
-            text: 'Grafiek'
+            #text: 'Grafiek'
             size_hint: 0.8, 1
 
 <PPGScreen>
