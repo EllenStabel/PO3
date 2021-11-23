@@ -34,7 +34,7 @@ class ECGScreen(Screen):
 
 class AnchorLayoutECG(AnchorLayout):
     def __init__(self, **kwargs):
-        super(AnchorLayoutECG, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         grafiek_ecg = self.ids.grafiek_ECG
         grafiek_ecg.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
@@ -59,12 +59,13 @@ class image(Image):
     pass
 
 
-bestand = Builder.load_file("filter.kv")
-
 
 class FilterApp(App):
     def build(self):
-        return bestand
+        bestand = Builder.load_file("filter.kv")
+        grafiek_ecg = self.ids.grafiek_ECG
+        grafiek_ecg.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+        return AnchorLayoutECG()
 
 
 FilterApp().run()
