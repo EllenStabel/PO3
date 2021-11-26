@@ -147,6 +147,7 @@ ScreenManagement:
             size_hint: (0.8, 1)
             pos_hint: {"left":1, "top":1}
             on_press:
+                root.verwijderenECG()
                 root.manager.current = 'main'
                 root.manager.transition.direction = 'right'
     AnchorLayout:
@@ -189,6 +190,7 @@ ScreenManagement:
             size_hint: (0.8, 1)
             pos_hint: {"left":1, "top":1}
             on_press:
+                root.verwijderenPPG()
                 root.manager.current = 'main'
                 root.manager.transition.direction = 'right'
     AnchorLayout:
@@ -232,6 +234,7 @@ ScreenManagement:
             size_hint: (0.8, 1)
             pos_hint: {"left":1, "top":1}
             on_press:
+                root.verwijderenEDA()
                 root.manager.current = 'main'
                 root.manager.transition.direction = 'right'
     Button:

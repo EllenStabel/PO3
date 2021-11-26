@@ -35,15 +35,18 @@ class MainScreen(Screen):
 
 
 class ECGScreen(Screen):
-    pass
+    def verwijderenECG(self):
+        self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
 
 
 class PPGScreen(Screen):
-    pass
+    def verwijderenPPG(self):
+        self.manager.get_screen('PPG').ids.grafiekPPG.clear_widgets()
 
 
 class EDAScreen(Screen):
-    pass
+    def verwijderenEDA(self):
+        self.manager.get_screen('EDA').ids.grafiekEDA.clear_widgets()
 
 
 class ScreenManagement(ScreenManager):
