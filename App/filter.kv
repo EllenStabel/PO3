@@ -38,7 +38,7 @@ ScreenManagement:
             radius: [15]
 
 
-<MainScreen>
+<MainScreen@Screen>
     name: 'main'
     canvas.before:
         Color:
@@ -68,9 +68,11 @@ ScreenManagement:
             Button:
                 text: 'waarde ECG'
                 background_color: 1, 1, 1, 0
-                on_press:
+                on_release:
+                    root.plotECG()
                     root.manager.current = 'ECG'
                     root.manager.transition.direction = 'left'
+
 
         BoxLayout:
             orientation: 'horizontal'
@@ -90,6 +92,7 @@ ScreenManagement:
                 text: 'waarde PPG'
                 background_color: 1, 1, 1, 0
                 on_press:
+                    root.plotPPG()
                     root.manager.current = 'PPG'
                     root.manager.transition.direction = 'left'
         BoxLayout:
@@ -110,11 +113,12 @@ ScreenManagement:
                 text: 'waarde EDA'
                 background_color: 1, 1, 1, 0
                 on_press:
+                    root.plotEDA()
                     root.manager.current = 'EDA'
                     root.manager.transition.direction = 'left'
 
 
-<ECGScreen>
+<ECGScreen@Screen>
     name: 'ECG'
     canvas.before:
         Color:
@@ -145,23 +149,17 @@ ScreenManagement:
             on_press:
                 root.manager.current = 'main'
                 root.manager.transition.direction = 'right'
-    AnchorLayoutECG:
-
-
-<AnchorLayoutECG>:
-    anchor_x: "center"
-    anchor_y: "center"
-    BoxLayout:
-        size_hint: 1, .5
-        Label:
-            text: 'Waarde ECG'
-            size_hint: 0.2, 1
+    AnchorLayout:
+        anchor_x: "center"
+        anchor_y: "center"
         BoxLayout:
-            id: grafiek_ecg
-        #Label:
-
-            #text: 'Grafiek'
-            size_hint: 0.8, 1
+            size_hint: 1, .5
+            Label:
+                text: 'Waarde ECG'
+                size_hint: 0.2, 1
+            BoxLayout:
+                id: grafiekECG
+                size_hint: 0.8, 1
 
 <PPGScreen>
     name: 'PPG'
@@ -193,19 +191,17 @@ ScreenManagement:
             on_press:
                 root.manager.current = 'main'
                 root.manager.transition.direction = 'right'
-    AnchorLayoutPPG:
-
-<AnchorLayoutPPG@AnchorLayout>:
-    anchor_x: "center"
-    anchor_y: "center"
-    BoxLayout:
-        size_hint: 1, .5
-        Label:
-            text: 'Waarde PPG'
-            size_hint: 0.2, 1
-        Label:
-            text: 'Grafiek'
-            size_hint: 0.8, 1
+    AnchorLayout:
+        anchor_x: "center"
+        anchor_y: "center"
+        BoxLayout:
+            size_hint: 1, .5
+            Label:
+                text: 'Waarde PPG'
+                size_hint: 0.2, 1
+            BoxLayout:
+                id: grafiekPPG
+                size_hint: 0.8, 1
 
 <EDAScreen>
     name: 'EDA'
@@ -246,16 +242,14 @@ ScreenManagement:
             import webbrowser
             webbrowser.open('https://www.youtube.com/watch?v=lFcSrYw-ARY')
 
-    AnchorLayoutEDA:
-
-<AnchorLayoutEDA@AnchorLayout>:
-    anchor_x: "center"
-    anchor_y: "center"
-    BoxLayout:
-        size_hint: 1, .5
-        Label:
-            text: 'Waarde EDA'
-            size_hint: 0.2, 1
-        Label:
-            text: 'Grafiek'
-            size_hint: 0.8, 1
+    AnchorLayout:
+        anchor_x: "center"
+        anchor_y: "center"
+        BoxLayout:
+            size_hint: 1, .5
+            Label:
+                text: 'Waarde EDA'
+                size_hint: 0.2, 1
+            BoxLayout:
+                id: grafiekEDA
+                size_hint: 0.8, 1

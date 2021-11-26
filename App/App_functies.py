@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
-
 x = [1, 2, 3, 4, 5]
 y = [5, 12, 6, 9, 15]
 
@@ -25,22 +24,18 @@ class TitleScreen(Screen):
 
 
 class MainScreen(Screen):
-    pass
+    def plotECG(self):
+        self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+    def plotPPG(self):
+        self.manager.get_screen('PPG').ids.grafiekPPG.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+    def plotEDA(self):
+        self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
 
 class ECGScreen(Screen):
     pass
-
-
-class AnchorLayoutECG(AnchorLayout):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        grafiek_ecg = self.ids.grafiek_ECG
-        grafiek_ecg.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-
-    """
-    pass
-    """
 
 
 class PPGScreen(Screen):
@@ -59,13 +54,12 @@ class image(Image):
     pass
 
 
+bestand = Builder.load_file("filter.kv")
+
 
 class FilterApp(App):
     def build(self):
-        bestand = Builder.load_file("filter.kv")
-        grafiek_ecg = self.ids.grafiek_ECG
-        grafiek_ecg.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-        return AnchorLayoutECG()
+        return bestand
 
 
 FilterApp().run()
