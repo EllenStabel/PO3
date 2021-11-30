@@ -54,7 +54,7 @@ ScreenManagement:
         BoxLayout:
             orientation: 'horizontal'
             Label:
-                size_hint: (0.05,1)
+                size_hint: (0.2,1)
             Image:
                 source: 'Heart-symbol.png'
                 size_hint: (0.1, 1)
@@ -64,21 +64,37 @@ ScreenManagement:
             Label:
                 text: 'ECG'
                 font_size: "50dp"
-                size_hint: (0.35, 1)
-            Button:
-                text: '73'
-                font_size: "80dp"
-                background_color: 1, 1, 1, 0
-                on_release:
-                    root.plotECG()
-                    root.manager.current = 'ECG'
-                    root.manager.transition.direction = 'left'
+                size_hint: (0.3, 1)
+            BoxLayout:
+                Button:
+                    text: '73'
+                    text_size: self.width, self.height
+                    font_size: "80dp"
+                    halign: 'right'
+                    valign: 'middle'
+                    background_color: 1, 1, 1, 0
+                    on_press:
+                        root.plotECG()
+                        root.manager.current = 'ECG'
+                        root.manager.transition.direction = 'left'
+
+                Button:
+                    text: 'BPM'
+                    text_size: self.width- dp(10), self.height- dp(10)
+                    font_size: "40dp"
+                    halign: 'left'
+                    valign: 'center'
+                    background_color: 1, 1, 1, 0
+                    on_press:
+                        root.plotECG()
+                        root.manager.current = 'ECG'
+                        root.manager.transition.direction = 'left'
 
 
         BoxLayout:
             orientation: 'horizontal'
             Label:
-                size_hint: (0.05,1)
+                size_hint: (0.2,1)
             Image:
                 source: 'zuurstof.png'
                 size_hint: (0.1, 1)
@@ -87,20 +103,38 @@ ScreenManagement:
             Label:
                 text: 'PPG'
                 font_size: "50dp"
-                size_hint: (0.35, 1)
+                size_hint: (0.3, 1)
 
-            Button:
-                text: '96'
-                font_size: "80dp"
-                background_color: 1, 1, 1, 0
-                on_press:
-                    root.plotPPG()
-                    root.manager.current = 'PPG'
-                    root.manager.transition.direction = 'left'
+            BoxLayout:
+                Button:
+                    text: '96'
+                    text_size: self.width, self.height
+                    font_size: "80dp"
+                    halign: 'right'
+                    valign: 'middle'
+                    background_color: 1, 1, 1, 0
+                    on_press:
+                        root.plotPPG()
+                        root.manager.current = 'PPG'
+                        root.manager.transition.direction = 'left'
+
+                Button:
+                    text: '%'
+                    text_size: self.width- dp(10), self.height- dp(10)
+                    font_size: "40dp"
+                    halign: 'left'
+                    valign: 'center'
+                    background_color: 1, 1, 1, 0
+                    on_press:
+                        root.plotPPG()
+                        root.manager.current = 'PPG'
+                        root.manager.transition.direction = 'left'
+
+
         BoxLayout:
             orientation: 'horizontal'
             Label:
-                size_hint: (0.05,1)
+                size_hint: (0.2,1)
             Image:
                 source: 'zweetdruppels.png'
                 size_hint: (0.1, 1)
@@ -110,15 +144,31 @@ ScreenManagement:
             Label:
                 text: 'EDA'
                 font_size: "50dp"
-                size_hint: (0.35, 1)
-            Button:
-                text: '103'
-                font_size: "80dp"
-                background_color: 1, 1, 1, 0
-                on_press:
-                    root.plotEDA()
-                    root.manager.current = 'EDA'
-                    root.manager.transition.direction = 'left'
+                size_hint: (0.3, 1)
+            BoxLayout:
+                Button:
+                    text: '103'
+                    text_size: self.width, self.height
+                    font_size: "80dp"
+                    halign: 'right'
+                    valign: 'middle'
+                    background_color: 1, 1, 1, 0
+                    on_press:
+                        root.plotEDA()
+                        root.manager.current = 'EDA'
+                        root.manager.transition.direction = 'left'
+
+                Button:
+                    text: 'V'
+                    text_size: self.width- dp(10), self.height- dp(10)
+                    font_size: "40dp"
+                    halign: 'left'
+                    valign: 'center'
+                    background_color: 1, 1, 1, 0
+                    on_press:
+                        root.plotEDA()
+                        root.manager.current = 'EDA'
+                        root.manager.transition.direction = 'left'
 
 
 <ECGScreen@Screen>
