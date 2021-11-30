@@ -18,6 +18,7 @@ from matplotlib.animation import FuncAnimation
 from scipy import signal, misc
 import csv
 
+
 def initialise_filters_ecg(sample_frequency, baseline_cutoff_frequency, powerline_cutoff_frequency_1,
                            powerline_cutoff_frequency_2, lowpass_cutoff_frequency, order):
     sos_baseline = signal.butter(order, baseline_cutoff_frequency, btype='high', output='sos', fs=sample_frequency)
@@ -66,6 +67,7 @@ def eda_filter(unfilterd_signal, sos_lowpass, sos_highpass):
 
 def calculate_heartbeat(data_post_filter, min_peak, max_peak, sample_frequency, x_vals):
     peaks = signal.find_peaks(signal.detrend(data_post_filter), [min_peak, max_peak], distance=round(60 / 220 * sample_frequency))
+
     peak_index = peaks[0]
     peak_amplitude = peaks[1]['peak_heights']
     #heartbeat = 60 * len(peaks[0]) / x_vals[-1]
@@ -113,7 +115,8 @@ def animate(i):
     data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
 
     x_vals = [i / 360 for i in range(len(data_post_filter))]
-    heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360), x_vals)
+    heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
+                                                                x_vals)
     plt.cla()
     plt.plot(np.array(peak_index) / 360, peak_amplitude, c='#0f0f0f', marker='D')
     plt.plot(x_vals, signal.detrend(data_post_filter))
@@ -134,9 +137,9 @@ y = [5, 12, 6, 9, 15]
 plt.plot(x, y)
 plt.xlabel("x-as")
 plt.ylabel("y-as")
->>>>>>> Stashed changes
-
 '''
+
+
 class TitleScreen(Screen):
     pass
 
@@ -144,7 +147,6 @@ class TitleScreen(Screen):
 class MainScreen(Screen):
 
     def plotECG(self):
-
         k = next(index)
         data_pre_filter = ecg[: 10 * k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
@@ -152,15 +154,13 @@ class MainScreen(Screen):
         x_vals = [i / 360 for i in range(len(data_post_filter))]
         heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
                                                                     x_vals)
-
-
         k = next(index)
         data_pre_filter = ecg[: 10 * k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
         x_vals = [i / 360 for i in range(len(data_post_filter))]
 
         heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
-                                                                  x_vals)
+                                                                    x_vals)
         print(heartbeat)
         plt.cla()
         plt.plot(np.array(peak_index) / 360, peak_amplitude, c='#0f0f0f', marker='D')
@@ -180,7 +180,6 @@ class MainScreen(Screen):
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
         x_vals = [i / 360 for i in range(len(data_post_filter))]
 
-
     def plotPPG(self):
         x = [1, 2, 3, 4, 5]
         y = [5, 12, 6, 9, 15]
@@ -199,17 +198,16 @@ class MainScreen(Screen):
         plt.ylabel("y-as")
         self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
-
     def heartbeat(self):
         k = next(index)
         data_pre_filter = ecg[: 10 * k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
 
         x_vals = [i / 360 for i in range(len(data_post_filter))]
-        heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360), x_vals)
-        return heartbeat
+        heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
+                                                                    x_vals)
 
-        
+        return int(heartbeat)
 
     def waardeECG(self):
         pass
@@ -219,10 +217,6 @@ class MainScreen(Screen):
 
     def waardeEDA(self):
         pass
-
-
-
-
 
 
 class ECGScreen(Screen):
