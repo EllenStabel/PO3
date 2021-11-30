@@ -145,6 +145,20 @@ class TitleScreen(Screen):
 
 
 class MainScreen(Screen):
+    def initialise_ecg():
+        return misc.electrocardiogram()
+
+    ecg = initialise_ecg()
+    ecg = ecg[0:10000]
+
+    sos_baseline, sos_powerline, sos_lowpass = initialise_filters_ecg(360, 0.5, 49, 51, 100, 4)
+    # plt.plot(ecg)
+    # plt.show()
+
+    x_vals = []
+    y_vals = []
+
+    index = count()
 
     def plotECG(self):
         k = next(index)
