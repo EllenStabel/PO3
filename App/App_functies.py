@@ -17,7 +17,7 @@ from matplotlib.animation import FuncAnimation
 from scipy import signal, misc
 import csv
 
-"""
+
 def initialise_filters_ecg(sample_frequency, baseline_cutoff_frequency, powerline_cutoff_frequency_1,
                            powerline_cutoff_frequency_2, lowpass_cutoff_frequency, order):
     sos_baseline = signal.butter(order, baseline_cutoff_frequency, btype='high', output='sos', fs=sample_frequency)
@@ -41,22 +41,20 @@ def initialise_filters_eda(sample_frequency, lowpass_cutoff_frequency, higpass_c
     return sos_lowpass, sos_higpass
 
 
-def ecg_filter(unfilterd_signal, sos_baseline, memory_baseline, sos_powerline, memory_powerline,
-               sos_lowpass, memory_lowpass):
+def ecg_filter(unfilterd_signal, sos_baseline, sos_powerline, sos_lowpass):
     # assert len(unfilterd_signal) == length_signal
-    unfilterd_signal, memory_baseline = signal.sosfilt(sos_baseline, unfilterd_signal, zi=memory_baseline)
-    unfilterd_signal, memory_powerline = signal.sosfilt(sos_powerline, unfilterd_signal, zi=memory_powerline)
-    filter_signal, memory_lowpass = signal.sosfilt(sos_lowpass, unfilterd_signal, zi=memory_lowpass)
-    return filter_signal, memory_baseline, memory_powerline, memory_lowpass
+    unfilterd_signal = signal.sosfilt(sos_baseline, unfilterd_signal)
+    unfilterd_signal = signal.sosfilt(sos_powerline, unfilterd_signal)
+    filter_signal = signal.sosfilt(sos_lowpass, unfilterd_signal)
+    return filter_signal
 
 
-def ppg_filter(unfilterd_signal_red, unfilterd_signal_ir, sos_ac, sos_dc, memory_red_ac, memory_ir_ac,
-               memory_red_dc, memory_ir_dc):
+def ppg_filter(unfilterd_signal_red, unfilterd_signal_ir, sos_ac, sos_dc):
     # assert len(unfilterd_signal_red) == length_signal and len(unfilterd_signal_ir) == length_signal
-    unfilterd_signal_red_ac = signal.sosfilt(sos_ac, unfilterd_signal_red, zi=memory_red_ac)
-    unfilterd_signal_ir_ac = signal.sosfilt(sos_ac, unfilterd_signal_ir, zi=memory_ir_ac)
-    unfilterd_signal_red_dc = signal.sosfilt(sos_dc, unfilterd_signal_red, zi=memory_red_dc)
-    unfilterd_signal_ir_dc = signal.sosfilt(sos_dc, unfilterd_signal_ir, zi=memory_ir_dc)
+    unfilterd_signal_red_ac = signal.sosfilt(sos_ac, unfilterd_signal_red)
+    unfilterd_signal_ir_ac = signal.sosfilt(sos_ac, unfilterd_signal_ir)
+    unfilterd_signal_red_dc = signal.sosfilt(sos_dc, unfilterd_signal_red)
+    unfilterd_signal_ir_dc = signal.sosfilt(sos_dc, unfilterd_signal_ir)
     return unfilterd_signal_red_ac, unfilterd_signal_ir_ac, unfilterd_signal_red_dc, unfilterd_signal_ir_dc
 
 
@@ -108,28 +106,14 @@ y_vals = []
 index = count()
 
 
-def animate(i, memory_baseline=None, memory_powerline=None, memory_lowpass=None):
-    if memory_lowpass is None:
-        memory_lowpass = [[0] * 2] * 2
-    if memory_powerline is None:
-        memory_powerline = [[0] * 2] * 4
-    if memory_baseline is None:
-        memory_baseline = [[0] * 2] * 2
-
-    memory_lowpass = [[0] * 2] * 2
-    memory_powerline = [[0] * 2] * 4
-    memory_baseline = [[0] * 2] * 2
+def animate(i):
 
     k = next(index)
     data_pre_filter = ecg[: 10 * k + 10]
-    data_post_filter, memory_baseline, memory_powerline, memory_lowpass = ecg_filter(data_pre_filter, sos_baseline,
-                                                                                     memory_baseline, sos_powerline,
-                                                                                     memory_powerline, sos_lowpass,
-                                                                                     memory_lowpass)
+    data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
 
     x_vals = [i / 360 for i in range(len(data_post_filter))]
     heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360), x_vals)
-    print(heartbeat)
     plt.cla()
     plt.plot(np.array(peak_index) / 360, peak_amplitude, c='#0f0f0f', marker='D')
     plt.plot(x_vals, signal.detrend(data_post_filter))
@@ -141,14 +125,6 @@ ani = FuncAnimation(plt.gcf(), animate, interval=10)
 
 plt.tight_layout()
 plt.show()
-"""
-
-x = [1, 2, 3, 4, 5]
-y = [5, 12, 6, 9, 15]
-
-plt.plot(x, y)
-plt.xlabel("x-as")
-plt.ylabel("y-as")
 
 
 class TitleScreen(Screen):
@@ -156,14 +132,52 @@ class TitleScreen(Screen):
 
 
 class MainScreen(Screen):
+
     def plotECG(self):
+        k = next(index)
+        data_pre_filter = ecg[: 10 * k + 10]
+        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
+
+        x_vals = [i / 360 for i in range(len(data_post_filter))]
+        heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
+                                                                    x_vals)
+        plt.cla()
+        plt.plot(np.array(peak_index) / 360, peak_amplitude, c='#0f0f0f', marker='D')
+        plt.plot(x_vals, signal.detrend(data_post_filter))
+        plt.xlim(x_vals[-1] - 1, x_vals[-1])
+        plt.ylim(-3, 3)
+        ani = FuncAnimation(plt.gcf(), animate, interval=10)
+
+        plt.tight_layout()
+
         self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
     def plotPPG(self):
+        x = [1, 2, 3, 4, 5]
+        y = [5, 12, 6, 9, 15]
+
+        plt.plot(x, y)
+        plt.xlabel("x-as")
+        plt.ylabel("y-as")
         self.manager.get_screen('PPG').ids.grafiekPPG.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
     def plotEDA(self):
+        x = [1, 2, 3, 4, 5]
+        y = [5, 12, 6, 9, 15]
+
+        plt.plot(x, y)
+        plt.xlabel("x-as")
+        plt.ylabel("y-as")
         self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+    def heartbeat(self):
+        k = next(index)
+        data_pre_filter = ecg[: 10 * k + 10]
+        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
+
+        x_vals = [i / 360 for i in range(len(data_post_filter))]
+        heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360), x_vals)
+        return heartbeat
 
 
 class ECGScreen(Screen):
