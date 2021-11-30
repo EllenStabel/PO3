@@ -91,6 +91,11 @@ ScreenManagement:
                         root.manager.transition.direction = 'left'
 
 
+
+
+
+
+
         BoxLayout:
             orientation: 'horizontal'
             Label:
@@ -171,6 +176,7 @@ ScreenManagement:
                         root.manager.transition.direction = 'left'
 
 
+
 <ECGScreen@Screen>
     name: 'ECG'
     canvas.before:
@@ -209,11 +215,13 @@ ScreenManagement:
         BoxLayout:
             size_hint: 1, .5
             Label:
-                text: 'Waarde ECG'
-                size_hint: 0.2, 1
+                text: '73'
+                size_hint: 0.3, 1
+                font_size: "80dp"
+
             BoxLayout:
                 id: grafiekECG
-                size_hint: 0.8, 1
+                size_hint: 0.7, 1
 
 <PPGScreen>
     name: 'PPG'
@@ -253,10 +261,10 @@ ScreenManagement:
             size_hint: 1, .5
             Label:
                 text: 'Waarde PPG'
-                size_hint: 0.2, 1
+                size_hint: 0.3, 1
             BoxLayout:
                 id: grafiekPPG
-                size_hint: 0.8, 1
+                size_hint: 0.7, 1
 
 <EDAScreen>
     name: 'EDA'
@@ -305,7 +313,7 @@ ScreenManagement:
             size_hint: 1, .5
             Label:
                 text: 'Waarde EDA'
-                size_hint: 0.2, 1
+                size_hint: 0.3, 1
             BoxLayout:
                 id: grafiekEDA
-                size_hint: 0.8, 1
+                size_hint: 0.7, 1

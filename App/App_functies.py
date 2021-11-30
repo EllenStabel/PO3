@@ -1,4 +1,5 @@
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
@@ -7,16 +8,15 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.core.window import Window
-import matplotlib.pyplot as plt
 import numpy as np
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 import random
 from itertools import count
 import pandas as pd
+import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from scipy import signal, misc
 import csv
-
 
 def initialise_filters_ecg(sample_frequency, baseline_cutoff_frequency, powerline_cutoff_frequency_1,
                            powerline_cutoff_frequency_2, lowpass_cutoff_frequency, order):
@@ -97,8 +97,8 @@ ecg = initialise_ecg()
 ecg = ecg[0:10000]
 
 sos_baseline, sos_powerline, sos_lowpass = initialise_filters_ecg(360, 0.5, 49, 51, 100, 4)
-plt.plot(ecg)
-plt.show()
+# plt.plot(ecg)
+# plt.show()
 
 x_vals = []
 y_vals = []
@@ -127,6 +127,16 @@ plt.tight_layout()
 plt.show()
 
 
+'''
+x = [1, 2, 3, 4, 5]
+y = [5, 12, 6, 9, 15]
+
+plt.plot(x, y)
+plt.xlabel("x-as")
+plt.ylabel("y-as")
+>>>>>>> Stashed changes
+
+'''
 class TitleScreen(Screen):
     pass
 
@@ -134,6 +144,7 @@ class TitleScreen(Screen):
 class MainScreen(Screen):
 
     def plotECG(self):
+
         k = next(index)
         data_pre_filter = ecg[: 10 * k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
@@ -141,16 +152,34 @@ class MainScreen(Screen):
         x_vals = [i / 360 for i in range(len(data_post_filter))]
         heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
                                                                     x_vals)
+
+
+        k = next(index)
+        data_pre_filter = ecg[: 10 * k + 10]
+        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
+        x_vals = [i / 360 for i in range(len(data_post_filter))]
+
+        heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
+                                                                  x_vals)
+        print(heartbeat)
         plt.cla()
         plt.plot(np.array(peak_index) / 360, peak_amplitude, c='#0f0f0f', marker='D')
         plt.plot(x_vals, signal.detrend(data_post_filter))
         plt.xlim(x_vals[-1] - 1, x_vals[-1])
         plt.ylim(-3, 3)
+
         ani = FuncAnimation(plt.gcf(), animate, interval=10)
 
         plt.tight_layout()
 
         self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+        # Clock.schedule_interval(self.update, 1)
+
+    def update(self):
+        data_pre_filter = ecg[: 10 * k + 10]
+        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
+        x_vals = [i / 360 for i in range(len(data_post_filter))]
+
 
     def plotPPG(self):
         x = [1, 2, 3, 4, 5]
@@ -170,6 +199,7 @@ class MainScreen(Screen):
         plt.ylabel("y-as")
         self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
+
     def heartbeat(self):
         k = next(index)
         data_pre_filter = ecg[: 10 * k + 10]
@@ -178,6 +208,21 @@ class MainScreen(Screen):
         x_vals = [i / 360 for i in range(len(data_post_filter))]
         heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360), x_vals)
         return heartbeat
+
+        
+
+    def waardeECG(self):
+        pass
+
+    def waardePPG(self):
+        pass
+
+    def waardeEDA(self):
+        pass
+
+
+
+
 
 
 class ECGScreen(Screen):
