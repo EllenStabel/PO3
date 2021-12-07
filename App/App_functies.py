@@ -108,26 +108,6 @@ y_vals = []
 index = count()
 
 
-def animate(i):
-
-    k = next(index)
-    data_pre_filter = ecg[: 10 * k + 10]
-    data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
-
-    x_vals = [i / 360 for i in range(len(data_post_filter))]
-    heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
-                                                                x_vals)
-    plt.cla()
-    plt.plot(np.array(peak_index) / 360, peak_amplitude, c='#0f0f0f', marker='D')
-    plt.plot(x_vals, signal.detrend(data_post_filter))
-    plt.xlim(x_vals[-1] - 1, x_vals[-1])
-    plt.ylim(-3, 3)
-
-
-ani = FuncAnimation(plt.gcf(), animate, interval=10)
-
-plt.tight_layout()
-plt.show()
 
 
 '''
@@ -137,6 +117,7 @@ y = [5, 12, 6, 9, 15]
 plt.plot(x, y)
 plt.xlabel("x-as")
 plt.ylabel("y-as")
+
 '''
 
 
@@ -158,70 +139,75 @@ class MainScreen(Screen):
     x_vals = []
     y_vals = []
 
-    index = count()
+    # index = count()
+    k = 0
 
-    def plotECG(self):
-        k = next(index)
-        data_pre_filter = ecg[: 10 * k + 10]
-        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
 
-        x_vals = [i / 360 for i in range(len(data_post_filter))]
-        heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
-                                                                    x_vals)
-        k = next(index)
-        data_pre_filter = ecg[: 10 * k + 10]
+
+    def plot_ecg(self):
+
+        self.k = 0
+        data_pre_filter = ecg[: 10 * self.k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
         x_vals = [i / 360 for i in range(len(data_post_filter))]
-
-        heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
-                                                                    x_vals)
-        print(heartbeat)
         plt.cla()
-        plt.plot(np.array(peak_index) / 360, peak_amplitude, c='#0f0f0f', marker='D')
         plt.plot(x_vals, signal.detrend(data_post_filter))
         plt.xlim(x_vals[-1] - 1, x_vals[-1])
         plt.ylim(-3, 3)
+        self.fig1 = plt.gcf()
+        Clock.schedule_interval(self.update_ecg_grafiek,1/20)
+        return self.fig1
 
-        ani = FuncAnimation(plt.gcf(), animate, interval=10)
+    def update_ecg_grafiek(self, *args):
 
-        plt.tight_layout()
+        self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
+        self.k += 1
+        data_pre_filter = ecg[: 10 * self.k + 10]
+        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
 
-        self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-        # Clock.schedule_interval(self.update, 1)
-
-    def update(self):
-        data_pre_filter = ecg[: 10 * k + 10]
+        x_vals = [i / 360 for i in range(len(data_post_filter))]
+        plt.cla()
+        plt.plot(x_vals, signal.detrend(data_post_filter))
+        plt.xlim(x_vals[-1] - 1, x_vals[-1])
+        plt.ylim(-3, 3)
+        self.fig1 = plt.gcf()
+        self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(self.fig1))
+'''
+    def heartbeat(self):
+        self.k = 0
+        data_pre_filter = ecg[: 10 * self.k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
         x_vals = [i / 360 for i in range(len(data_post_filter))]
 
-    def plotPPG(self):
-        x = [1, 2, 3, 4, 5]
-        y = [5, 12, 6, 9, 15]
+        heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
+                                                                    x_vals)
+        Clock.schedule_interval(self.update_ecg_waarde, 1 / 20)
+        self.hartslag = str(heartbeat)
 
-        plt.plot(x, y)
-        plt.xlabel("x-as")
-        plt.ylabel("y-as")
-        self.manager.get_screen('PPG').ids.grafiekPPG.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-
-    def plotEDA(self):
-        x = [1, 2, 3, 4, 5]
-        y = [5, 12, 6, 9, 15]
-
-        plt.plot(x, y)
-        plt.xlabel("x-as")
-        plt.ylabel("y-as")
-        self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-
-    def heartbeat(self):
-        k = next(index)
-        data_pre_filter = ecg[: 10 * k + 10]
+    def update_ecg_waarde(self, *args):
+        self.k += 1
+        data_pre_filter = ecg[: 10 * self.k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
-
         x_vals = [i / 360 for i in range(len(data_post_filter))]
         heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
                                                                     x_vals)
+        self.hartslag = str(heartbeat)
 
-        return int(heartbeat)
+
+
+
+    def plotPPG(self):
+
+        self.manager.get_screen('PPG').ids.grafiekPPG.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+    def plotEDA(self):
+
+        self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+
+
+
+
 
     def waardeECG(self):
         pass
@@ -229,9 +215,7 @@ class MainScreen(Screen):
     def waardePPG(self):
         pass
 
-    def waardeEDA(self):
-        pass
-
+'''
 
 class ECGScreen(Screen):
     def verwijderenECG(self):

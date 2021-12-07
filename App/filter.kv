@@ -67,14 +67,15 @@ ScreenManagement:
                 size_hint: (0.3, 1)
             BoxLayout:
                 Button:
-                    text: str(root.heartbeat())
+                    id: waardeECG
+                    text: '2'
                     text_size: self.width, self.height
                     font_size: "80dp"
                     halign: 'right'
                     valign: 'middle'
                     background_color: 1, 1, 1, 0
                     on_press:
-                        root.plotECG()
+                        root.plot_ecg()
                         root.manager.current = 'ECG'
                         root.manager.transition.direction = 'left'
 
@@ -86,7 +87,7 @@ ScreenManagement:
                     valign: 'center'
                     background_color: 1, 1, 1, 0
                     on_press:
-                        root.plotECG()
+                        root.plot_ecg()
                         root.manager.current = 'ECG'
                         root.manager.transition.direction = 'left'
 
