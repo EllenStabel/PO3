@@ -1,6 +1,7 @@
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
+from kivy.properties import NumericProperty, StringProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.image import Image
 import numpy as np
@@ -91,20 +92,13 @@ ecg = ecg[0:10000]
 
 sos_baseline, sos_powerline, sos_lowpass = initialise_filters_ecg(360, 0.5, 49, 51, 100, 4)
 
-x_vals = []
-y_vals = []
-
-index = count()
 
 
 class TitleScreen(Screen):
-    pass
 
-
-class MainScreen(Screen):
     def initialise_ecg():
         return misc.electrocardiogram()
-
+    
     ecg = initialise_ecg()
     ecg = ecg[0:10000]
 
@@ -113,7 +107,6 @@ class MainScreen(Screen):
     x_vals = []
     y_vals = []
 
-    # index = count()
     k = 0
 
     def plot_ecg(self):
@@ -144,7 +137,9 @@ class MainScreen(Screen):
         plt.ylim(-3, 3)
         self.fig1 = plt.gcf()
         self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(self.fig1))
-'''
+
+    hartslag = NumericProperty(0)
+
     def heartbeat(self):
         self.k = 0
         data_pre_filter = ecg[: 10 * self.k + 10]
@@ -154,7 +149,9 @@ class MainScreen(Screen):
         heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
                                                                     x_vals)
         Clock.schedule_interval(self.update_ecg_waarde, 1 / 20)
-        self.hartslag = str(heartbeat)
+        self.hartslag = str(int(heartbeat))
+        self.manager.get_screen('main').ids.waardeECG.text = str(self.hartslag)
+
 
     def update_ecg_waarde(self, *args):
         self.k += 1
@@ -163,10 +160,12 @@ class MainScreen(Screen):
         x_vals = [i / 360 for i in range(len(data_post_filter))]
         heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
                                                                     x_vals)
-        self.hartslag = str(heartbeat)
 
+        self.hartslag = str(int(heartbeat))
+        self.manager.get_screen('main').ids.waardeECG.text = str(self.hartslag)
+        self.manager.get_screen('ECG').ids.waardeECG.text = str(self.hartslag)
 
-
+class MainScreen(Screen):
 
     def plotPPG(self):
 
@@ -182,7 +181,7 @@ class MainScreen(Screen):
     def waardePPG(self):
         pass
 
-'''
+
 
 
 class ECGScreen(Screen):

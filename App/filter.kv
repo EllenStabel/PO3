@@ -24,6 +24,8 @@ ScreenManagement:
         on_release:
             root.manager.current = 'main'
             root.manager.transition.direction = 'left'
+            root.heartbeat()
+            root.plot_ecg()
 
 
 <RoundedButton@Button>
@@ -68,14 +70,14 @@ ScreenManagement:
             BoxLayout:
                 Button:
                     id: waardeECG
-                    text: '2'
+                    # text: str(root.hartslag)
                     text_size: self.width, self.height
                     font_size: "80dp"
                     halign: 'right'
                     valign: 'middle'
                     background_color: 1, 1, 1, 0
                     on_release:
-                        root.plot_ecg()
+                        # root.plot_ecg()
                         root.manager.current = 'ECG'
                         root.manager.transition.direction = 'left'
 
@@ -87,9 +89,10 @@ ScreenManagement:
                     valign: 'center'
                     background_color: 1, 1, 1, 0
                     on_release:
-                        root.plot_ecg()
+                        # root.plot_ecg()
                         root.manager.current = 'ECG'
                         root.manager.transition.direction = 'left'
+
 
         BoxLayout:
             orientation: 'horizontal'
@@ -210,6 +213,7 @@ ScreenManagement:
         BoxLayout:
             size_hint: 1, .6
             Label:
+                id: waardeECG
                 text: '73'
                 size_hint: 0.3, 1
                 font_size: "80dp"
