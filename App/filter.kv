@@ -26,6 +26,7 @@ ScreenManagement:
             root.manager.transition.direction = 'left'
             root.heartbeat()
             root.plot_ecg()
+            # root.plot_eda()
 
 
 <RoundedButton@Button>
@@ -169,9 +170,9 @@ ScreenManagement:
                     valign: 'center'
                     background_color: 1, 1, 1, 0
                     on_release:
-                        root.plotEDA()
                         root.manager.current = 'EDA'
                         root.manager.transition.direction = 'left'
+
 
 
 
