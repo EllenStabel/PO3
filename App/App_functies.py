@@ -9,6 +9,69 @@ from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from itertools import count
 import matplotlib.pyplot as plt
 from scipy import signal, misc
+import random
+from itertools import count
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from scipy import signal, misc
+import numpy as np
+import csv
+
+eda = np.loadtxt(r'myData.txt')
+sample_frequency = 100
+
+sos_lowpass = signal.butter(6, 5, btype='low', output='sos', fs=sample_frequency)
+sos_higpass = signal.butter(4, 0.05, btype='high', output='sos', fs=sample_frequency)
+
+eda = signal.sosfilt(sos_lowpass, eda)
+scr = signal.sosfilt(sos_higpass, eda)
+time_scr = np.arange(0, len(scr) / sample_frequency, 1 / sample_frequency)
+time_eda = np.arange(0, len(eda) / sample_frequency, 1 / sample_frequency)
+plt.plot(time_eda, eda)
+plt.show()
+
+
+def stress_detection(tijd_eda, gefilterd_verkort_signaal):
+    assert len(gefilterd_verkort_signaal) == 100
+    peaks = signal.find_peaks(gefilterd_verkort_signaal)
+    peak_index = peaks[0]
+    p = np.polyfit(tijd_eda, gefilterd_verkort_signaal, 1)
+    if p[0] > 0.176 or p[0] < -0.176:
+        print("zweetproductie is aan het stijgen")
+    else:
+        print("zweetproductie is constant")
+    return
+
+
+
+plt.plot(time_eda, signal.detrend(eda))
+plt.show()
+
+index = count()
+
+
+def animate(i):
+    k = next(index)
+    data_post_filter = scr[: 100 * k + 100]
+    print(data_post_filter)
+    if k >= 1:
+        gefilterd_verkorte_data = data_post_filter[100 * (k-1) + 100: 100 * k + 100]
+        print(gefilterd_verkorte_data)
+        print(len(gefilterd_verkorte_data))
+        tijd_eda = [i/100 for i in range(len(gefilterd_verkorte_data))]
+        stress_detection(tijd_eda, gefilterd_verkorte_data)
+    x_vals = [i / 100 for i in range(len(data_post_filter))]
+    plt.cla()
+    plt.plot(x_vals, signal.detrend(data_post_filter))
+    plt.xlim(x_vals[-1] - 1, x_vals[-1])
+    plt.ylim(-3, 3)
+
+
+ani = FuncAnimation(plt.gcf(), animate, interval=100)
+
+plt.tight_layout()
+plt.show()
 
 
 def initialise_filters_ecg(sample_frequency, baseline_cutoff_frequency, powerline_cutoff_frequency_1,
