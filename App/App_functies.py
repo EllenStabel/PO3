@@ -1,22 +1,15 @@
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.properties import NumericProperty, StringProperty
+from kivy.properties import NumericProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.image import Image
-import numpy as np
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from itertools import count
-import matplotlib.pyplot as plt
-from scipy import signal, misc
-import random
-from itertools import count
-import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from scipy import signal, misc
 import numpy as np
-import csv
 
 eda = np.loadtxt(r'myData.txt')
 sample_frequency = 100
