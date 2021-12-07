@@ -1,22 +1,13 @@
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.uix.anchorlayout import AnchorLayout
-from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
-from kivy.uix.widget import Widget
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.image import Image
-from kivy.core.window import Window
 import numpy as np
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
-import random
 from itertools import count
-import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 from scipy import signal, misc
-import csv
 
 
 def initialise_filters_ecg(sample_frequency, baseline_cutoff_frequency, powerline_cutoff_frequency_1,
@@ -99,26 +90,11 @@ ecg = initialise_ecg()
 ecg = ecg[0:10000]
 
 sos_baseline, sos_powerline, sos_lowpass = initialise_filters_ecg(360, 0.5, 49, 51, 100, 4)
-# plt.plot(ecg)
-# plt.show()
 
 x_vals = []
 y_vals = []
 
 index = count()
-
-
-
-
-'''
-x = [1, 2, 3, 4, 5]
-y = [5, 12, 6, 9, 15]
-
-plt.plot(x, y)
-plt.xlabel("x-as")
-plt.ylabel("y-as")
-
-'''
 
 
 class TitleScreen(Screen):
@@ -133,8 +109,6 @@ class MainScreen(Screen):
     ecg = ecg[0:10000]
 
     sos_baseline, sos_powerline, sos_lowpass = initialise_filters_ecg(360, 0.5, 49, 51, 100, 4)
-    # plt.plot(ecg)
-    # plt.show()
 
     x_vals = []
     y_vals = []
