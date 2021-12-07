@@ -142,8 +142,6 @@ class MainScreen(Screen):
     # index = count()
     k = 0
 
-
-
     def plot_ecg(self):
 
         self.k = 0
@@ -204,11 +202,6 @@ class MainScreen(Screen):
 
         self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
-
-
-
-
-
     def waardeECG(self):
         pass
 
@@ -216,6 +209,7 @@ class MainScreen(Screen):
         pass
 
 '''
+
 
 class ECGScreen(Screen):
     def verwijderenECG(self):
