@@ -5,12 +5,9 @@ from kivy.properties import NumericProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.image import Image
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
-from itertools import count
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 from scipy import signal, misc
 import numpy as np
-
 
 
 def initialise_filters_ecg(sample_frequency, baseline_cutoff_frequency, powerline_cutoff_frequency_1,
@@ -94,7 +91,7 @@ ecg = ecg[0:10000]
 sos_baseline, sos_powerline, sos_lowpass = initialise_filters_ecg(360, 0.5, 49, 51, 100, 4)
 
 # EDA
-'''
+
 eda = np.loadtxt(r'myData.txt')
 sample_frequency = 100
 
@@ -105,7 +102,7 @@ eda = signal.sosfilt(sos_lowpass, eda)
 scr = signal.sosfilt(sos_higpass, eda)
 time_scr = np.arange(0, len(scr) / sample_frequency, 1 / sample_frequency)
 time_eda = np.arange(0, len(eda) / sample_frequency, 1 / sample_frequency)
-
+'''
 
 def stress_detection(tijd_eda, gefilterd_verkort_signaal):
     assert len(gefilterd_verkort_signaal) == 100
@@ -140,11 +137,11 @@ def animate(i):
 
 '''
 
+
 class TitleScreen(Screen):
-
     def plot_ecg(self):
-
         self.k = 0
+        '''
         data_pre_filter = ecg[: 10 * self.k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
         x_vals = [i / 360 for i in range(len(data_post_filter))]
@@ -153,42 +150,45 @@ class TitleScreen(Screen):
         plt.xlim(x_vals[-1] - 1, x_vals[-1])
         plt.ylim(-3, 3)
         self.fig1 = plt.gcf()
-        Clock.schedule_interval(self.update_ecg_grafiek,1/20)
-        return self.fig1
+        '''
+        Clock.schedule_interval(self.update_ecg_grafiek, 1/20)
+        # return self.fig1
 
     def update_ecg_grafiek(self, *args):
-
         self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
         self.k += 1
         data_pre_filter = ecg[: 10 * self.k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
 
         x_vals = [i / 360 for i in range(len(data_post_filter))]
+        self.fig1 = plt.figure(1)
         plt.cla()
         plt.plot(x_vals, signal.detrend(data_post_filter))
         plt.xlim(x_vals[-1] - 1, x_vals[-1])
         plt.ylim(-3, 3)
-        self.fig1 = plt.gcf()
         self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(self.fig1))
 
     hartslag = NumericProperty(0)
 
     def heartbeat(self):
-        self.k = 0
-        data_pre_filter = ecg[: 10 * self.k + 10]
+        self.m = 0
+        '''
+        data_pre_filter = ecg[: 10 * self.m + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
         x_vals = [i / 360 for i in range(len(data_post_filter))]
 
         heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
                                                                     x_vals)
+                                                                    '''
         Clock.schedule_interval(self.update_ecg_waarde, 1 / 20)
+        '''
         self.hartslag = str(int(heartbeat))
         self.manager.get_screen('main').ids.waardeECG.text = str(self.hartslag)
-
+        '''
 
     def update_ecg_waarde(self, *args):
-        self.k += 1
-        data_pre_filter = ecg[: 10 * self.k + 10]
+        self.m += 1
+        data_pre_filter = ecg[: 10 * self.m + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
         x_vals = [i / 360 for i in range(len(data_post_filter))]
         heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
@@ -197,38 +197,35 @@ class TitleScreen(Screen):
         self.hartslag = str(int(heartbeat))
         self.manager.get_screen('main').ids.waardeECG.text = str(self.hartslag)
         self.manager.get_screen('ECG').ids.waardeECG.text = str(self.hartslag)
-'''
+
     def plot_eda(self):
-        self.k = 0
-        data_post_filter = scr[: 100 * self.k + 100]
+        self.h = 0
+        '''
+        data_post_filter = scr[: 100 * self.h + 100]
         x_vals = [i / 100 for i in range(len(data_post_filter))]
         plt.cla()
         plt.plot(x_vals, signal.detrend(data_post_filter))
         plt.xlim(x_vals[-1] - 1, x_vals[-1])
         plt.ylim(-3, 3)
         self.fig2 = plt.gcf()
+        '''
         Clock.schedule_interval(self.update_eda_grafiek, 1 / 20)
-        return self.fig2
+        # return self.fig2
 
     def update_eda_grafiek(self,*args):
         self.manager.get_screen('EDA').ids.grafiekEDA.clear_widgets()
-        self.k += 1
-        data_post_filter = scr[: 100 * self.k + 100]
+        self.h += 1
+        data_post_filter = scr[: 100 * self.h + 100]
         x_vals = [i / 100 for i in range(len(data_post_filter))]
+        self.fig2 = plt.figure(2)
         plt.cla()
         plt.plot(x_vals, signal.detrend(data_post_filter))
         plt.xlim(x_vals[-1] - 1, x_vals[-1])
         plt.ylim(-3, 3)
-
-        self.fig2 = plt.gcf()
         self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(self.fig2))
-'''
-
 
 
 class MainScreen(Screen):
-
-
 
     def plotPPG(self):
 
@@ -242,8 +239,6 @@ class MainScreen(Screen):
 
     def waardePPG(self):
         pass
-
-
 
 
 class ECGScreen(Screen):
