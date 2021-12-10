@@ -14,19 +14,37 @@ ScreenManagement:
             size: self.size
             source: 'Logo.png'
 
-    RoundedButton:
-        text: 'Verder'
-        # background_normal: ''
-        # background_color: 0, 88/255, 143/255, 1
-        size_hint: 0.2, 0.1
+    BoxLayout:
+        size_hint: 0.35, 0.1
+        spacing: '10dp'
         pos_hint: {"center_y": 0.12, "center_x":0.5}
+        Label:
+            text: 'Leeftijd: '
+            halign: 'center'
+            valign: 'middle'
+            color: 33/255, 90/255, 122/255
+            font_size: "30dp"
+            size_hint: 0.35, 1
 
-        on_release:
-            root.manager.current = 'main'
-            root.manager.transition.direction = 'left'
-            root.heartbeat()
-            root.plot_ecg()
-            root.plot_eda()
+        TextInput:
+            size_hint: 0.25, 1
+            multiline: False
+            halign: 'center'
+            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+
+        RoundedButton:
+            text: 'Verder'
+            # background_normal: ''
+            # background_color: 0, 88/255, 143/255, 1
+            size_hint: 0.4, 1
+            #pos_hint: {"center_y": 0.12, "center_x":0.5}
+
+            on_release:
+                root.manager.current = 'main'
+                root.manager.transition.direction = 'left'
+                root.heartbeat()
+                root.plot_ecg()
+                root.plot_eda()
 
 
 <RoundedButton@Button>
@@ -34,7 +52,7 @@ ScreenManagement:
     background_color: (0,0,0,0)
     canvas.before:
         Color:
-            rgb: (0, 88/255, 143/255, 1)
+            rgb: 33/255, 90/255, 122/255
         RoundedRectangle:
             size: self.size
             pos: self.pos

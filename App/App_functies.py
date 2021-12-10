@@ -102,40 +102,6 @@ eda = signal.sosfilt(sos_lowpass, eda)
 scr = signal.sosfilt(sos_higpass, eda)
 time_scr = np.arange(0, len(scr) / sample_frequency, 1 / sample_frequency)
 time_eda = np.arange(0, len(eda) / sample_frequency, 1 / sample_frequency)
-'''
-
-def stress_detection(tijd_eda, gefilterd_verkort_signaal):
-    assert len(gefilterd_verkort_signaal) == 100
-    peaks = signal.find_peaks(gefilterd_verkort_signaal)
-    peak_index = peaks[0]
-    p = np.polyfit(tijd_eda, gefilterd_verkort_signaal, 1)
-    if p[0] > 0.176 or p[0] < -0.176:
-        print("zweetproductie is aan het stijgen")
-    else:
-        print("zweetproductie is constant")
-    return
-
-
-
-
-
-def animate(i):
-    k = next(index)
-    data_post_filter = scr[: 100 * k + 100]
-    print(data_post_filter)
-    if k >= 1:
-        gefilterd_verkorte_data = data_post_filter[100 * (k-1) + 100: 100 * k + 100]
-        print(gefilterd_verkorte_data)
-        print(len(gefilterd_verkorte_data))
-        tijd_eda = [i/100 for i in range(len(gefilterd_verkorte_data))]
-        stress_detection(tijd_eda, gefilterd_verkorte_data)
-    x_vals = [i / 100 for i in range(len(data_post_filter))]
-    plt.cla()
-    plt.plot(x_vals, signal.detrend(data_post_filter))
-    plt.xlim(x_vals[-1] - 1, x_vals[-1])
-    plt.ylim(-3, 3)
-
-'''
 
 
 class TitleScreen(Screen):
