@@ -8,6 +8,18 @@ from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 import matplotlib.pyplot as plt
 from scipy import signal, misc
 import numpy as np
+from itertools import count
+import math
+import statistics
+
+
+"""
+'''
+###########################
+# code team 2 beveiliging #
+###########################
+'''
+
 import requests
 import decryption.py
 import time
@@ -381,7 +393,12 @@ def decryption(to_decrypt1, keyVal=3000, tag_given=[]): # to_decrypt1 ipv data_t
     '''
     return plaintext
 
-# ONS DEEL
+"""
+
+############
+# ONS DEEL #
+############
+
 
 def initialise_filters_ecg(sample_frequency, baseline_cutoff_frequency, powerline_cutoff_frequency_1,
                            powerline_cutoff_frequency_2, lowpass_cutoff_frequency, order):
@@ -400,17 +417,15 @@ def initialise_filters_ppg(sample_frequency, ac_cutoff_frequency_1, ac_cutoff_fr
     return sos_ac, sos_dc
 
 
-def initialise_filters_eda(sample_frequency, lowpass_cutoff_frequency, higpass_cutoff_frequency, order_lowpass, order_highpass):
+def initialise_filters_eda(sample_frequency, lowpass_cutoff_frequency, order_lowpass):
     sos_lowpass = signal.butter(order_lowpass, lowpass_cutoff_frequency, btype='low', output='sos', fs=sample_frequency)
-    sos_higpass = signal.butter(order_highpass, higpass_cutoff_frequency, btype='high', output='sos', fs=sample_frequency)
-    return sos_lowpass, sos_higpass
+    return sos_lowpass
 
 
-def ecg_filter(unfilterd_signal, sos_baseline, sos_powerline, sos_lowpass):
-    # assert len(unfilterd_signal) == length_signal
-    unfilterd_signal = signal.sosfilt(sos_baseline, unfilterd_signal)
-    unfilterd_signal = signal.sosfilt(sos_powerline, unfilterd_signal)
-    filter_signal = signal.sosfilt(sos_lowpass, unfilterd_signal)
+def ecg_filter(unfiltered_signal, sos_baseline, sos_powerline, sos_lowpass):
+    unfiltered_signal = signal.sosfilt(sos_baseline, unfiltered_signal)
+    unfiltered_signal = signal.sosfilt(sos_powerline, unfiltered_signal)
+    filter_signal = signal.sosfilt(sos_lowpass, unfiltered_signal)
     return filter_signal
 
 
@@ -423,18 +438,50 @@ def ppg_filter(unfilterd_signal_red, unfilterd_signal_ir, sos_ac, sos_dc):
     return unfilterd_signal_red_ac, unfilterd_signal_ir_ac, unfilterd_signal_red_dc, unfilterd_signal_ir_dc
 
 
-def eda_filter(unfilterd_signal, sos_lowpass, sos_highpass):
-    unfilterd_signal = signal.sosfilt(sos_lowpass, unfilterd_signal)
-    filterd_signal = signal.sosfilt(sos_highpass, unfilterd_signal)
-    return filterd_signal
+def eda_filter(unfiltered_signal, sos_lowpass):
+    filtered_signal = signal.sosfilt(sos_lowpass, unfiltered_signal)
+    return filtered_signal
 
 
-def calculate_heartbeat(data_post_filter, min_peak, max_peak, sample_frequency, x_vals):
-    peaks = signal.find_peaks(signal.detrend(data_post_filter), [min_peak, max_peak], distance=round(60 / 220 * sample_frequency))
+def stress_detection_ecg(peak_index, sample_frequency):
+    if len(peak_index) >= 3:
+        distance_between_peak = np.diff(peak_index)
+        difference_in_distance_between_peak = np.diff(distance_between_peak)
+        RMS_in_samples = math.sqrt(np.mean(np.array(difference_in_distance_between_peak) ** 2))
+        RMS_in_seconden = RMS_in_samples / sample_frequency
+        if RMS_in_seconden <= 0.02:
+            return True
+    return False
 
+
+def stress_detection_eda(gefilterd_verkort_signaal, sample_frequency):
+    peaks = signal.find_peaks(gefilterd_verkort_signaal, [-100, 100])
     peak_index = peaks[0]
     peak_amplitude = peaks[1]['peak_heights']
-    #heartbeat = 60 * len(peaks[0]) / x_vals[-1]
+    if len(peak_index) >= 5:
+        p = np.polyfit(np.array(peak_index) / sample_frequency, peak_amplitude, 1)
+        if p[0] > 0.176:
+            return True
+    return False
+
+
+def find_median_peak(data_post_filter, sample_frequency):
+    peaks = signal.find_peaks(data_post_filter, height=5)
+    peak_amplitude = peaks[1]['peak_heights']
+    R_median = statistics.median(peak_amplitude)
+    maximum = max(data_post_filter)
+    return maximum
+
+
+def moving_average(x, w):
+    return np.convolve(x, np.ones(w), 'valid') / w
+
+
+def calculate_heartbeat(data_post_filter, R_median, sample_frequency):
+    peaks = signal.find_peaks(signal.detrend(data_post_filter), [0.612 * R_median, 1.388 * R_median],
+                              distance=round(60 / 220 * sample_frequency))
+    peak_index = peaks[0]
+    peak_amplitude = peaks[1]['peak_heights']
     if len(peak_index) >= 2:
         heartbeat = (peak_index[-1] - peak_index[-2]) / sample_frequency * 60
         return heartbeat, peak_index, peak_amplitude
@@ -442,131 +489,155 @@ def calculate_heartbeat(data_post_filter, min_peak, max_peak, sample_frequency, 
         return 0, peak_index, peak_amplitude
 
 
-def stress_detection_eda(data_post_filter, x_vals):
-    data = data_post_filter[-1:-5]
-    p = np.polyfit(x_vals, data, 1)
-    y = np.polyval(p, x_vals)
-    rico = p[0]
-    if rico > 0:
-        return 1
-    else:
-        return 0
-
-
-# visualisatie
-
-def initialise_ecg():
-    return misc.electrocardiogram()
-
-ecg = initialise_ecg()
+# initialisatie: visualisatie ECG
+ecg = np.loadtxt(r'ecgvanjanne.txt', delimiter=',')
 ecg = ecg[0:10000]
 
-sos_baseline, sos_powerline, sos_lowpass = initialise_filters_ecg(360, 0.5, 49, 51, 100, 4)
+sos_baseline, sos_powerline, sos_lowpass = initialise_filters_ecg(250, 0.5, 49, 51, 100, 4)
 
-# EDA
+x_vals = []
+y_vals = []
 
+# initialisatie: visualisatie EDA
 eda = np.loadtxt(r'myData.txt')
 sample_frequency = 100
 
 sos_lowpass = signal.butter(6, 5, btype='low', output='sos', fs=sample_frequency)
-sos_higpass = signal.butter(4, 0.05, btype='high', output='sos', fs=sample_frequency)
 
-eda = signal.sosfilt(sos_lowpass, eda)
-scr = signal.sosfilt(sos_higpass, eda)
-time_scr = np.arange(0, len(scr) / sample_frequency, 1 / sample_frequency)
+# eda = signal.sosfilt(sos_lowpass, eda)
 time_eda = np.arange(0, len(eda) / sample_frequency, 1 / sample_frequency)
 
 
 class TitleScreen(Screen):
     def plot_ecg(self):
         self.k = 0
-
-        data_pre_filter = ecg[: 10 * self.k + 10]
-        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
-        x_vals = [i / 360 for i in range(len(data_post_filter))]
-        plt.cla()
-        plt.plot(x_vals, signal.detrend(data_post_filter))
-        plt.xlim(x_vals[-1] - 1, x_vals[-1])
-        plt.ylim(-3, 3)
-        self.fig1 = plt.gcf()
-
         Clock.schedule_interval(self.update_ecg_grafiek, 1/20)
-        # return self.fig1
 
     def update_ecg_grafiek(self, *args):
-        self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
+        sample_frequency = 250
         self.k += 1
+        time_to_settle_2 = 10
+
         data_pre_filter = ecg[: 10 * self.k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
 
-        x_vals = [i / 360 for i in range(len(data_post_filter))]
-        self.fig1 = plt.figure(1)
-        plt.cla()
-        plt.plot(x_vals, signal.detrend(data_post_filter))
-        plt.xlim(x_vals[-1] - 1, x_vals[-1])
-        plt.ylim(-3, 3)
-        self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(self.fig1))
+        len_data_post_filter = len(data_post_filter)
 
-    hartslag = NumericProperty(0)
+        if len_data_post_filter / sample_frequency > time_to_settle_2:
+            self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
+            t_vals = [i / sample_frequency for i in range(len_data_post_filter)]
+            self.fig1 = plt.figure(1)
+            plt.cla()
+            plt.plot(t_vals, data_post_filter)
+            plt.xlim(t_vals[-1] - 1, t_vals[-1])
+            plt.ylim(-1000, 1000)
+            self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(self.fig1))
+
+    ecg_waarde_getal = NumericProperty(0)
 
     def heartbeat(self):
         self.m = 0
-        '''
-        data_pre_filter = ecg[: 10 * self.m + 10]
-        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
-        x_vals = [i / 360 for i in range(len(data_post_filter))]
-
-        heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
-                                                                    x_vals)
-                                                                    '''
         Clock.schedule_interval(self.update_ecg_waarde, 1 / 20)
-        '''
-        self.hartslag = str(int(heartbeat))
-        self.manager.get_screen('main').ids.waardeECG.text = str(self.hartslag)
-        '''
 
     def update_ecg_waarde(self, *args):
+        sample_frequency = 250
         self.m += 1
+        time_to_settle_1 = 5
+        time_to_settle_2 = 10
+
         data_pre_filter = ecg[: 10 * self.m + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
-        x_vals = [i / 360 for i in range(len(data_post_filter))]
-        heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, 1, 2.5, round(60 / 220 * 360),
-                                                                    x_vals)
 
-        self.hartslag = str(int(heartbeat))
-        self.manager.get_screen('main').ids.waardeECG.text = str(self.hartslag)
-        self.manager.get_screen('ECG').ids.waardeECG.text = str(self.hartslag)
+        len_data_post_filter = len(data_post_filter)
 
+        if len_data_post_filter / sample_frequency > time_to_settle_2:
+            median_peak = find_median_peak(
+                data_post_filter[time_to_settle_1 * sample_frequency: time_to_settle_2 * sample_frequency],
+                sample_frequency)
+            heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, R_median=median_peak,
+                                                                        sample_frequency=250)
+            stress = stress_detection_ecg(data_post_filter, sample_frequency)
+            self.ecg_waarde_getal = str(int(heartbeat))
+
+            if stress is True:
+                self.manager.get_screen('main').ids.waardeECG.text = str(self.ecg_waarde_getal)
+                self.manager.get_screen('main').ids.waardeECG.color = [1, 0, 0, 1]
+                self.manager.get_screen('ECG').ids.waardeECG.text = str(self.ecg_waarde_getal)
+            else:
+                self.manager.get_screen('main').ids.waardeECG.text = str(self.ecg_waarde_getal)
+                self.manager.get_screen('main').ids.waardeECG.color = [1, 1, 1, 1]
+                self.manager.get_screen('ECG').ids.waardeECG.text = str(self.ecg_waarde_getal)
 
     def plot_eda(self):
         self.h = 0
-        '''
-        data_post_filter = scr[: 100 * self.h + 100]
-        x_vals = [i / 100 for i in range(len(data_post_filter))]
-        plt.cla()
-        plt.plot(x_vals, signal.detrend(data_post_filter))
-        plt.xlim(x_vals[-1] - 1, x_vals[-1])
-        plt.ylim(-3, 3)
-        self.fig2 = plt.gcf()
-        '''
-        Clock.schedule_interval(self.update_eda_grafiek, 1 / 20)
-        # return self.fig2
+        self.l = 0
+        Clock.schedule_interval(self.update_eda_grafiek, 1 / 10)
 
     def update_eda_grafiek(self,*args):
-        self.manager.get_screen('EDA').ids.grafiekEDA.clear_widgets()
-        self.h += 1
-        data_post_filter = scr[: 100 * self.h + 100]
-        x_vals = [i / 100 for i in range(len(data_post_filter))]
         self.fig2 = plt.figure(2)
-        plt.cla()
-        plt.plot(x_vals, signal.detrend(data_post_filter))
-        plt.xlim(x_vals[-1] - 1, x_vals[-1])
-        plt.ylim(-3, 3)
-        self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(self.fig2))
+        sample_frequency = 100
+        self.h += 1
+        time_to_settle = 10
 
-    def leeftijd_validatie(self):
+        data_pre_filter = eda[: 100 * self.h + 100]
+        data_post_filter = eda_filter(data_pre_filter, sos_lowpass)
+
+        len_data_post_filter = len(data_post_filter)
+
+        if len_data_post_filter / sample_frequency > time_to_settle:
+            self.manager.get_screen('EDA').ids.grafiekEDA.clear_widgets()
+            self.l += 1
+            t_vals = [i / sample_frequency for i in range(len_data_post_filter)]
+            plt.cla()
+            plt.plot(t_vals, data_post_filter)
+            plt.xlim(t_vals[-1] - 20, t_vals[-1])
+            plt.ylim(min(data_post_filter) * 1.1, max(data_post_filter) * 1.1)
+            self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(self.fig2))
+
+    eda_waarde_getal = NumericProperty(0)
+
+    def eda_waarde(self):
+        self.h = 0
+        self.l = 0
+        Clock.schedule_interval(self.update_eda_waarde, 1 / 20)
+
+    def update_eda_waarde(self, *args):
+        self.h += 1
+        time_to_settle = 10
+        sample_frequency = 100
+
+        data_pre_filter = eda[: 100 * self.h + 100]
+        data_post_filter = eda_filter(data_pre_filter, sos_lowpass)
+        len_data_post_filter = len(data_post_filter)
+
+        self.eda_waarde_getal = str(int(data_post_filter[-1]))
+
+        if len_data_post_filter / sample_frequency > time_to_settle:
+            self.l += 1
+            if self.l >= 1:
+                signal_data_for_fit = data_post_filter[100 * (self.l - 1) + 100: 100 * self.l + 100]
+                stress = stress_detection_eda(signal_data_for_fit, sample_frequency)
+                if stress is True:
+                    self.manager.get_screen('main').ids.waardeEDA.text = str(self.eda_waarde_getal)
+                    self.manager.get_screen('main').ids.waardeEDA.color = [1, 0, 0, 1]
+                    self.manager.get_screen('EDA').ids.waardeEDA.text = str(self.eda_waarde_getal)
+
+                else:
+                    self.manager.get_screen('main').ids.waardeEDA.text = str(self.eda_waarde_getal)
+                    self.manager.get_screen('main').ids.waardeEDA.color = [1, 1, 1, 1]
+                    self.manager.get_screen('EDA').ids.waardeEDA.text = str(self.eda_waarde_getal)
+
+
+
+
+
+
+
+    '''
+    def leeftijd_save(self):
         leeftijd = self.manager.get_screen('title').ids.input.text
         return leeftijd
+    '''
 
 
 class MainScreen(Screen):
@@ -583,16 +654,6 @@ class MainScreen(Screen):
 
     def waardePPG(self):
         pass
-    color = ListProperty([1,1,1,1])
-
-    def update_color(self):
-        self.hartslag = calculate_heartbeat()[0]
-        if int(self.hartslag) > int(130):
-            self.color = [0,1,0,1]
-        else:
-            pass
-
-
 
 
 class ECGScreen(Screen):

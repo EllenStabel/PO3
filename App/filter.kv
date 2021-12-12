@@ -14,40 +14,21 @@ ScreenManagement:
             size: self.size
             source: 'Logo.png'
 
-    BoxLayout:
-        size_hint: 0.35, 0.1
-        spacing: '10dp'
+    RoundedButton:
+        text: 'Verder'
+        # background_normal: ''
+        # background_color: 0, 88/255, 143/255, 1
+        size_hint: 0.2, 0.1
         pos_hint: {"center_y": 0.12, "center_x":0.5}
-        Label:
-            text: 'Leeftijd: '
-            halign: 'center'
-            valign: 'middle'
-            color: 33/255, 90/255, 122/255
-            font_size: "30dp"
-            size_hint: 0.35, 1
 
-        TextInput:
-            id: input
-            size_hint: 0.25, 1
-            multiline: False
-            halign: 'center'
-            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
-
-
-        RoundedButton:
-            text: 'Verder'
-            # background_normal: ''
-            # background_color: 0, 88/255, 143/255, 1
-            size_hint: 0.4, 1
-            #pos_hint: {"center_y": 0.12, "center_x":0.5}
-
-            on_release:
-                root.manager.current = 'main'
-                root.manager.transition.direction = 'left'
-                root.heartbeat()
-                root.plot_ecg()
-                root.plot_eda()
-                root.leeftijd_validatie()
+        on_release:
+            root.manager.current = 'main'
+            root.manager.transition.direction = 'left'
+            root.heartbeat()
+            root.plot_ecg()
+            root.plot_eda()
+            root.eda_waarde()
+#           root.leeftijd_save()
 
 
 <RoundedButton@Button>
@@ -93,7 +74,6 @@ ScreenManagement:
                 Button:
                     id: waardeECG
                     # text: str(root.hartslag)
-                    # color: root.change_color
                     text_size: self.width, self.height
                     font_size: "80dp"
                     halign: 'right'
@@ -173,7 +153,8 @@ ScreenManagement:
                 size_hint: (0.3, 1)
             BoxLayout:
                 Button:
-                    text: '103'
+                    id: waardeEDA
+                    # text: '103'
                     text_size: self.width, self.height
                     font_size: "80dp"
                     halign: 'right'
@@ -194,7 +175,13 @@ ScreenManagement:
                     on_release:
                         root.manager.current = 'EDA'
                         root.manager.transition.direction = 'left'
-
+        Button:
+            text: 'Ontspannen'
+            size_hint: 0.15, 0.5
+            pos_hint: {"center_y": 0.5, "center_x": 0.5}
+            on_release:
+                import webbrowser
+                webbrowser.open('https://www.youtube.com/watch?v=lFcSrYw-ARY')
 
 
 
@@ -237,7 +224,7 @@ ScreenManagement:
             size_hint: 1, .6
             Label:
                 id: waardeECG
-                text: '73'
+                # text: '73'
                 size_hint: 0.3, 1
                 font_size: "80dp"
 
@@ -320,13 +307,7 @@ ScreenManagement:
                 root.verwijderenEDA()
                 root.manager.current = 'main'
                 root.manager.transition.direction = 'right'
-    Button:
-        text: "Ontspannen"
-        size_hint: 0.15, 0.15
-        pos_hint: {"center_y": 0.1, "center_x": 0.5}
-        on_release:
-            import webbrowser
-            webbrowser.open('https://www.youtube.com/watch?v=lFcSrYw-ARY')
+
 
     AnchorLayout:
         anchor_x: "center"
@@ -334,8 +315,10 @@ ScreenManagement:
         BoxLayout:
             size_hint: 1, .5
             Label:
-                text: 'Waarde EDA'
+                id: waardeEDA
+                # text: 'Waarde EDA'
                 size_hint: 0.3, 1
+                font_size: "80dp"
             BoxLayout:
                 id: grafiekEDA
                 size_hint: 0.7, 1
