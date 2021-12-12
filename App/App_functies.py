@@ -8,7 +8,6 @@ from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 import matplotlib.pyplot as plt
 from scipy import signal, misc
 import numpy as np
-from itertools import count
 import math
 import statistics
 
@@ -623,12 +622,17 @@ class TitleScreen(Screen):
                     self.manager.get_screen('main').ids.waardeEDA.color = [1, 0, 0, 1]
                     self.manager.get_screen('main').ids.colorV.color = [1, 0, 0, 1]
                     self.manager.get_screen('EDA').ids.waardeEDA.text = str(self.eda_waarde_getal)
+                    self.manager.get_screen('EDA').ids.waardeEDA.color = [1, 0, 0, 1]
+                    self.manager.get_screen('EDA').ids.colorV.color = [1, 0, 0, 1]
+
 
                 else:
                     self.manager.get_screen('main').ids.waardeEDA.text = str(self.eda_waarde_getal)
                     self.manager.get_screen('main').ids.waardeEDA.color = [1, 1, 1, 1]
                     self.manager.get_screen('main').ids.colorV.color = [1, 1, 1, 1]
                     self.manager.get_screen('EDA').ids.waardeEDA.text = str(self.eda_waarde_getal)
+                    self.manager.get_screen('EDA').ids.waardeEDA.color = [1, 1, 1, 1]
+                    self.manager.get_screen('EDA').ids.colorV.color = [1, 1, 1, 1]
 
     '''
     def leeftijd_save(self):
