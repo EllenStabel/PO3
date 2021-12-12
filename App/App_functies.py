@@ -21,7 +21,7 @@ import statistics
 '''
 
 import requests
-import decryption.py
+import decryption
 import time
 import random
 
@@ -184,12 +184,12 @@ def loop():
 
 
 arr = []
-while True:
+while True and len(arr)< 10001:
     new_values = loop()
-    print(new_values)
-    # arr += new_values
-constants = [0xf0, 0xe1, 0xd2, 0xc3, 0xb4, 0xa5, 0x96, 0x87, 0x78, 0x69, 0x5a, 0x4b, 0x3c, 0x2d, 0x1e, 0x0f]
+    # print(new_values)
+    arr += new_values
 
+<<<<<<< HEAD
 state = [0 for i in range(5)]
 t = [0 for i in range(5)]
 
@@ -399,7 +399,6 @@ def decryption(to_decrypt1, keyVal=3000, tag_given=[]): # to_decrypt1 ipv data_t
 # ONS DEEL #
 ############
 
-
 def initialise_filters_ecg(sample_frequency, baseline_cutoff_frequency, powerline_cutoff_frequency_1,
                            powerline_cutoff_frequency_2, lowpass_cutoff_frequency, order):
     sos_baseline = signal.butter(order, baseline_cutoff_frequency, btype='high', output='sos', fs=sample_frequency)
@@ -562,10 +561,12 @@ class TitleScreen(Screen):
             if stress is True:
                 self.manager.get_screen('main').ids.waardeECG.text = str(self.ecg_waarde_getal)
                 self.manager.get_screen('main').ids.waardeECG.color = [1, 0, 0, 1]
+                self.manager.get_screen('main').ids.colorBPM.color = [1, 0, 0, 1]
                 self.manager.get_screen('ECG').ids.waardeECG.text = str(self.ecg_waarde_getal)
             else:
                 self.manager.get_screen('main').ids.waardeECG.text = str(self.ecg_waarde_getal)
                 self.manager.get_screen('main').ids.waardeECG.color = [1, 1, 1, 1]
+                self.manager.get_screen('main').ids.colorBPM.color = [1, 1, 1, 1]
                 self.manager.get_screen('ECG').ids.waardeECG.text = str(self.ecg_waarde_getal)
 
     def plot_eda(self):
@@ -620,18 +621,14 @@ class TitleScreen(Screen):
                 if stress is True:
                     self.manager.get_screen('main').ids.waardeEDA.text = str(self.eda_waarde_getal)
                     self.manager.get_screen('main').ids.waardeEDA.color = [1, 0, 0, 1]
+                    self.manager.get_screen('main').ids.colorV.color = [1, 0, 0, 1]
                     self.manager.get_screen('EDA').ids.waardeEDA.text = str(self.eda_waarde_getal)
 
                 else:
                     self.manager.get_screen('main').ids.waardeEDA.text = str(self.eda_waarde_getal)
                     self.manager.get_screen('main').ids.waardeEDA.color = [1, 1, 1, 1]
+                    self.manager.get_screen('main').ids.colorV.color = [1, 1, 1, 1]
                     self.manager.get_screen('EDA').ids.waardeEDA.text = str(self.eda_waarde_getal)
-
-
-
-
-
-
 
     '''
     def leeftijd_save(self):

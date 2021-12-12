@@ -28,7 +28,6 @@ ScreenManagement:
             root.plot_ecg()
             root.plot_eda()
             root.eda_waarde()
-#           root.leeftijd_save()
 
 
 <RoundedButton@Button>
@@ -80,19 +79,18 @@ ScreenManagement:
                     valign: 'middle'
                     background_color: 1, 1, 1, 0
                     on_release:
-                        # root.plot_ecg()
                         root.manager.current = 'ECG'
                         root.manager.transition.direction = 'left'
 
                 Button:
+                    id: colorBPM
                     text: 'BPM'
-                    text_size: self.width- dp(10), self.height- dp(10)
+                    text_size: self.width - dp(10), self.height - dp(10)
                     font_size: "40dp"
                     halign: 'left'
                     valign: 'center'
                     background_color: 1, 1, 1, 0
                     on_release:
-                        # root.plot_ecg()
                         root.manager.current = 'ECG'
                         root.manager.transition.direction = 'left'
 
@@ -125,6 +123,7 @@ ScreenManagement:
                         root.manager.transition.direction = 'left'
 
                 Button:
+                    id: color%
                     text: '%'
                     text_size: self.width- dp(10), self.height- dp(10)
                     font_size: "40dp"
@@ -166,6 +165,7 @@ ScreenManagement:
                         root.manager.transition.direction = 'left'
 
                 Button:
+                    id: colorV
                     text: 'V'
                     text_size: self.width- dp(10), self.height- dp(10)
                     font_size: "40dp"
