@@ -411,7 +411,7 @@ def initialise_filters_ppg(sample_frequency, ac_cutoff_frequency_1, ac_cutoff_fr
                            attenuation, order):
     sos_ac = signal.cheby2(order, attenuation, [ac_cutoff_frequency_1, ac_cutoff_frequency_2], btype='bandpass',
                            output='sos', fs=sample_frequency)
-    sos_dc = signal.cheby2(order, attenuation, dc_cutoff_frequency, btype='low')
+    sos_dc = signal.cheby2(order, attenuation, dc_cutoff_frequency, btype='low', output='sos', fs=sample_frequency)
     return sos_ac, sos_dc
 
 
@@ -427,13 +427,12 @@ def ecg_filter(unfiltered_signal, sos_baseline, sos_powerline, sos_lowpass):
     return filter_signal
 
 
-def ppg_filter(unfilterd_signal_red, unfilterd_signal_ir, sos_ac, sos_dc):
-    # assert len(unfilterd_signal_red) == length_signal and len(unfilterd_signal_ir) == length_signal
-    unfilterd_signal_red_ac = signal.sosfilt(sos_ac, unfilterd_signal_red)
-    unfilterd_signal_ir_ac = signal.sosfilt(sos_ac, unfilterd_signal_ir)
-    unfilterd_signal_red_dc = signal.sosfilt(sos_dc, unfilterd_signal_red)
-    unfilterd_signal_ir_dc = signal.sosfilt(sos_dc, unfilterd_signal_ir)
-    return unfilterd_signal_red_ac, unfilterd_signal_ir_ac, unfilterd_signal_red_dc, unfilterd_signal_ir_dc
+def ppg_filter(unfiltered_signal_red, unfiltered_signal_ir, sos_ac, sos_dc):
+    unfiltered_signal_red_ac = signal.sosfilt(sos_ac, unfiltered_signal_red)
+    unfiltered_signal_ir_ac = signal.sosfilt(sos_ac, unfiltered_signal_ir)
+    unfiltered_signal_red_dc = signal.sosfilt(sos_dc, unfiltered_signal_red)
+    unfiltered_signal_ir_dc = signal.sosfilt(sos_dc, unfiltered_signal_ir)
+    return unfiltered_signal_red_ac, unfiltered_signal_ir_ac, unfiltered_signal_red_dc, unfiltered_signal_ir_dc
 
 
 def eda_filter(unfiltered_signal, sos_lowpass):
@@ -450,6 +449,23 @@ def stress_detection_ecg(peak_index, sample_frequency):
         if RMS_in_seconden <= 0.02:
             return True
     return False
+
+
+def stress_detection_ppg(gefilterd_verkort_signaal, sample_frequency):
+    peaks = signal.find_peaks(gefilterd_verkort_signaal, [-100, 100])
+    "die -100 tot 100?"
+    "nog een bron zoeken voor afstand tussen twee ppg pieken"
+    "mean NN ppg = 800 miliseconden -> zo oke?, beter wat lager nemen??"
+    peak_index = peaks[0]
+    if len(peak_index) >= 3:
+        distance_between_peak = np.diff(peak_index)
+        difference_in_distance_between_peak = np.diff(distance_between_peak)
+        RMS_in_samples = math.sqrt(np.mean(np.array(difference_in_distance_between_peak) ** 2))
+        RMS_in_seconden = RMS_in_samples / sample_frequency
+        if 0.018 <= RMS_in_seconden <= 0.045:
+            return False
+        else:
+            return True
 
 
 def stress_detection_eda(gefilterd_verkort_signaal, sample_frequency):
@@ -495,6 +511,14 @@ sos_baseline, sos_powerline, sos_lowpass = initialise_filters_ecg(250, 0.5, 49, 
 
 x_vals = []
 y_vals = []
+
+
+# initialisatie: visualisatie PPG
+ppg_red = np.loadtxt(r'ppg_red.txt')
+ppg_ir = np.loadtxt(r'ppg_ir.txt')
+
+sos_ac, sos_dc = initialise_filters_ppg(100, 0.5, 5, 0.1, 40, 4)
+
 
 # initialisatie: visualisatie EDA
 eda = np.loadtxt(r'myData.txt')
@@ -568,13 +592,67 @@ class TitleScreen(Screen):
                 self.manager.get_screen('main').ids.colorBPM.color = [1, 1, 1, 1]
                 self.manager.get_screen('ECG').ids.waardeECG.text = str(self.ecg_waarde_getal)
 
+    def plot_ppg(self):
+        self.g = 0
+        Clock.schedule_interval(self.update_ppg_grafiek, 1/20)
+
+    def update_ppg_grafiek(self, *args):
+        self.g += 1
+        sample_frequency = 100
+        time_to_settle = 10
+
+        data_pre_filter_red = ppg_red[: 100 * self.g + 100]
+        data_pre_filter_ir = ppg_ir[: 100 * self.g + 100]
+        filtered_signal_red_ac, filtered_signal_ir_ac, filtered_signal_red_dc, filtered_signal_ir_dc = ppg_filter(
+            data_pre_filter_red, data_pre_filter_ir, sos_ac, sos_dc)
+
+        len_data_post_filter = len(filtered_signal_red_ac)
+
+        if len_data_post_filter / sample_frequency > time_to_settle:
+            self.manager.get_screen('PPG').ids.grafiekPPG.clear_widgets()
+            t_vals = [i / sample_frequency for i in range(len_data_post_filter)]
+            self.fig2 = plt.figure(2)
+            plt.cla()
+            plt.plot(t_vals, filtered_signal_red_dc)
+            plt.xlim(t_vals[-1] - 20, t_vals[-1])
+            plt.ylim(min(filtered_signal_red_dc), max(filtered_signal_red_dc) * 1.1)
+            self.manager.get_screen('PPG').ids.grafiekPPG.add_widget(FigureCanvasKivyAgg(self.fig2))
+
+    ppg_waarde_getal = NumericProperty(0)
+
+    def ppg_waarde(self):
+        self.g = 0
+        self.p = 0
+        Clock.schedule_interval(self.update_ppg_waarde, 1 / 20)
+
+    def update_ppg_waarde(self, *args):
+        sample_frequency = 100
+        self.g += 1
+        time_to_settle = 10
+
+        data_pre_filter_red = ppg_red[: 100 * self.g + 100]
+        data_pre_filter_ir = ppg_ir[: 100 * self.g + 100]
+        filtered_signal_red_ac, filtered_signal_ir_ac, filtered_signal_red_dc, filtered_signal_ir_dc = ppg_filter(
+            data_pre_filter_red, data_pre_filter_ir, sos_ac, sos_dc)
+
+        len_data_post_filter = len(filtered_signal_red_ac)
+
+        if len_data_post_filter / sample_frequency > time_to_settle:
+            self.p += 1
+            if self.p >= 1:
+                signal_data_for_stress_detection = data_pre_filter_red[100 * (self.p - 1) + 100: 100 * self.p + 100]
+                stress = stress_detection_ppg(signal_data_for_stress_detection, sample_frequency)
+                if stress is True:
+                    print("jij hebt stress")
+                else:
+                    print("jij hebt geen stress")
+
     def plot_eda(self):
         self.h = 0
         self.l = 0
         Clock.schedule_interval(self.update_eda_grafiek, 1 / 10)
 
     def update_eda_grafiek(self,*args):
-        self.fig2 = plt.figure(2)
         sample_frequency = 100
         self.h += 1
         time_to_settle = 10
@@ -588,11 +666,12 @@ class TitleScreen(Screen):
             self.manager.get_screen('EDA').ids.grafiekEDA.clear_widgets()
             self.l += 1
             t_vals = [i / sample_frequency for i in range(len_data_post_filter)]
+            self.fig3 = plt.figure(3)
             plt.cla()
             plt.plot(t_vals, data_post_filter)
             plt.xlim(t_vals[-1] - 20, t_vals[-1])
             plt.ylim(min(data_post_filter) * 1.1, max(data_post_filter) * 1.1)
-            self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(self.fig2))
+            self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(self.fig3))
 
     eda_waarde_getal = NumericProperty(0)
 
@@ -644,8 +723,7 @@ class TitleScreen(Screen):
 class MainScreen(Screen):
 
     def plotPPG(self):
-
-        self.manager.get_screen('PPG').ids.grafiekPPG.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+        pass
 
     def plotEDA(self):
         pass
