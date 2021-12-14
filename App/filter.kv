@@ -25,10 +25,10 @@ ScreenManagement:
         on_release:
             root.manager.current = 'main'
             root.manager.transition.direction = 'left'
-            root.heartbeat()
             root.plot_ecg()
             root.plot_ppg()
             root.plot_eda()
+            root.ecg_waarde()
             root.eda_waarde()
 
 
@@ -162,7 +162,7 @@ ScreenManagement:
 
                 Button:
                     id: colorV
-                    text: 'V'
+                    text: 'μS'
                     text_size: self.width- dp(10), self.height- dp(10)
                     font_size: self.width*0.2
                     halign: 'left'
@@ -374,7 +374,7 @@ ScreenManagement:
                 Label:
                     id: colorV
                     size_hint: 0.3, 1
-                    text: 'V'
+                    text: 'μS'
                     text_size: self.width, self.height
                     font_size: self.width*0.5
                     halign: 'left'

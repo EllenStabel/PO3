@@ -6,6 +6,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.image import Image
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 from scipy import signal, misc
 import numpy as np
 import math
@@ -534,14 +535,12 @@ time_eda = np.arange(0, len(eda) / sample_frequency, 1 / sample_frequency)
 class TitleScreen(Screen):
     def plot_ecg(self):
         self.k = 0
-        Clock.schedule_interval(self.update_ecg_grafiek, 1/20)
+        Clock.schedule_interval(self.update_ecg_grafiek, 1/40)
 
     def update_ecg_grafiek(self, *args):
-
         sample_frequency = 250
 
-
-        # self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
+        self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
         self.k += 1
         time_to_settle_2 = 10
 
@@ -562,9 +561,10 @@ class TitleScreen(Screen):
             self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(self.fig1))
 
 
+
     ecg_waarde_getal = NumericProperty(0)
 
-    def heartbeat(self):
+    def ecg_waarde(self):
         self.m = 0
         Clock.schedule_interval(self.update_ecg_waarde, 1 / 20)
 
