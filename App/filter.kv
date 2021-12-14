@@ -14,7 +14,7 @@ ScreenManagement:
             size: self.size
             source: 'Logo.png'
 
-    RoundedButton:
+    RoundedButton1:
         text: 'Verder'
         # background_normal: ''
         # background_color: 0, 88/255, 143/255, 1
@@ -32,7 +32,7 @@ ScreenManagement:
             root.eda_waarde()
 
 
-<RoundedButton@Button>
+<RoundedButton1@Button>
     background_normal: ''
     background_color: (0,0,0,0)
     canvas.before:
@@ -171,15 +171,26 @@ ScreenManagement:
                     on_release:
                         root.manager.current = 'EDA'
                         root.manager.transition.direction = 'left'
-        Button:
+        RoundedButton2:
             text: 'Ontspannen'
-            size_hint: 0.15, 0.5
+            color: 33/255, 90/255, 122/255
+            size_hint: 0.15, 0.3
             font_size: self.width*0.15
-            pos_hint: {"center_y": 0.5, "center_x": 0.5}
+            pos_hint: {"center_y": 0.3, "center_x": 0.5}
             on_release:
                 import webbrowser
                 webbrowser.open('https://www.youtube.com/watch?v=lFcSrYw-ARY')
 
+<RoundedButton2@Button>
+    background_normal: ''
+    background_color: (0,0,0,0)
+    canvas.before:
+        Color:
+            rgb: 1, 1, 1
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [15]
 
 
 <ECGScreen@Screen>

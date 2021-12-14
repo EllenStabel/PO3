@@ -1,7 +1,7 @@
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, ListProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.image import Image
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
@@ -137,7 +137,7 @@ def processData(data, keyVal, tag):
 
     tag = [int(x) for x in tag]  # decryptie algoritme verwacht het in int om te kunnen vergelijken
     decrypted_arr = decryption.decryption(data, keyVal, tag)  # data[i] is array met values die samen geencrypteerd zijn
-
+    # decrypted_arr = arr
     for i in range(len(decrypted_arr)):
         if decrypted_arr[i] is not None:
             decrypted_arr[i] = 5*decrypted_arr[i]/1024  # Naar volts
@@ -183,10 +183,11 @@ def loop():
 
 
 arr = []
-while True and len(arr)< 10001:
+while True and len(arr) < 1000:
     new_values = loop()
     # print(new_values)
     arr += new_values
+    print(len(arr))
 
 <<<<<<< HEAD
 state = [0 for i in range(5)]
@@ -536,12 +537,17 @@ class TitleScreen(Screen):
         Clock.schedule_interval(self.update_ecg_grafiek, 1/20)
 
     def update_ecg_grafiek(self, *args):
+
         sample_frequency = 250
+
+
+        # self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
         self.k += 1
         time_to_settle_2 = 10
 
         data_pre_filter = ecg[: 10 * self.k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
+
 
         len_data_post_filter = len(data_post_filter)
 
@@ -554,6 +560,7 @@ class TitleScreen(Screen):
             plt.xlim(t_vals[-1] - 1, t_vals[-1])
             plt.ylim(-1000, 1000)
             self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(self.fig1))
+
 
     ecg_waarde_getal = NumericProperty(0)
 
@@ -733,6 +740,18 @@ class MainScreen(Screen):
 
     def waardePPG(self):
         pass
+
+    color = ListProperty([1,1,1,1])
+'''
+    def update_color(self):
+        self.hartslag = 
+        if int(self.hartslag) > int(130):
+            self.color = [0,1,0,1]
+        else:
+            pass
+'''
+
+
 
 
 class ECGScreen(Screen):
