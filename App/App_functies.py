@@ -448,6 +448,7 @@ def stress_detection_ecg(peak_index, sample_frequency):
         difference_in_distance_between_peak = np.diff(distance_between_peak)
         RMS_in_samples = math.sqrt(np.mean(np.array(difference_in_distance_between_peak) ** 2))
         RMS_in_seconden = RMS_in_samples / sample_frequency
+        print(RMS_in_seconden)
         if RMS_in_seconden <= 0.02:
             return True
     return False
@@ -539,14 +540,11 @@ class TitleScreen(Screen):
 
     def update_ecg_grafiek(self, *args):
         sample_frequency = 250
-
-        self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
         self.k += 1
         time_to_settle_2 = 10
 
         data_pre_filter = ecg[: 10 * self.k + 10]
         data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
-
 
         len_data_post_filter = len(data_post_filter)
 
@@ -560,13 +558,11 @@ class TitleScreen(Screen):
             plt.ylim(-1000, 1000)
             self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(self.fig1))
 
-
-
     ecg_waarde_getal = NumericProperty(0)
 
     def ecg_waarde(self):
         self.m = 0
-        Clock.schedule_interval(self.update_ecg_waarde, 1 / 20)
+        Clock.schedule_interval(self.update_ecg_waarde, 1 / 40)
 
     def update_ecg_waarde(self, *args):
         sample_frequency = 250
@@ -593,11 +589,15 @@ class TitleScreen(Screen):
                 self.manager.get_screen('main').ids.waardeECG.color = [1, 0, 0, 1]
                 self.manager.get_screen('main').ids.colorBPM.color = [1, 0, 0, 1]
                 self.manager.get_screen('ECG').ids.waardeECG.text = str(self.ecg_waarde_getal)
+                self.manager.get_screen('ECG').ids.waardeECG.color = [1, 0, 0, 1]
+                self.manager.get_screen('ECG').ids.colorBPM.color = [1, 0, 0, 1]
             else:
                 self.manager.get_screen('main').ids.waardeECG.text = str(self.ecg_waarde_getal)
                 self.manager.get_screen('main').ids.waardeECG.color = [1, 1, 1, 1]
                 self.manager.get_screen('main').ids.colorBPM.color = [1, 1, 1, 1]
                 self.manager.get_screen('ECG').ids.waardeECG.text = str(self.ecg_waarde_getal)
+                self.manager.get_screen('ECG').ids.waardeECG.color = [1, 1, 1, 1]
+                self.manager.get_screen('ECG').ids.colorBPM.color = [1, 1, 1, 1]
 
     def plot_ppg(self):
         self.g = 0
@@ -740,18 +740,6 @@ class MainScreen(Screen):
 
     def waardePPG(self):
         pass
-
-    color = ListProperty([1,1,1,1])
-'''
-    def update_color(self):
-        self.hartslag = 
-        if int(self.hartslag) > int(130):
-            self.color = [0,1,0,1]
-        else:
-            pass
-'''
-
-
 
 
 class ECGScreen(Screen):
