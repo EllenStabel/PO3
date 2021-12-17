@@ -531,7 +531,7 @@ time_eda = np.arange(0, len(eda) / sample_frequency, 1 / sample_frequency)
 class TitleScreen(Screen):
     def plot_ecg(self):
         self.k = 0
-        Clock.schedule_interval(self.update_ecg_grafiek, 1/60)
+        Clock.schedule_interval(self.update_ecg_grafiek, 1/100)
 
     def update_ecg_grafiek(self, *args):
         sample_frequency = 250
@@ -548,7 +548,7 @@ class TitleScreen(Screen):
             t_vals = [i / sample_frequency for i in range(len_data_post_filter)]
             self.fig1 = plt.figure(1)
             plt.cla()
-            plt.plot(t_vals, data_post_filter)
+            plt.plot(t_vals[-300:], data_post_filter[-300:])
             plt.xlim(t_vals[-1] - 1, t_vals[-1])
             plt.ylim(-1000, 1000)
             plt.xlabel("Tijd [s]")
@@ -559,7 +559,7 @@ class TitleScreen(Screen):
 
     def ecg_waarde(self):
         self.m = 0
-        Clock.schedule_interval(self.update_ecg_waarde, 1 / 60)
+        Clock.schedule_interval(self.update_ecg_waarde, 1 / 100)
 
     def update_ecg_waarde(self, *args):
         sample_frequency = 250
