@@ -1,17 +1,15 @@
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.properties import NumericProperty, ListProperty
+from kivy.properties import NumericProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.image import Image
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-from scipy import signal, misc
+from scipy import signal
 import numpy as np
 import math
 import statistics
-from itertools import count
 
 
 """
@@ -450,7 +448,6 @@ def stress_detection_ecg(peak_index, sample_frequency):
         difference_in_distance_between_peak = np.diff(distance_between_peak)
         RMS_in_samples = math.sqrt(np.mean(np.array(difference_in_distance_between_peak) ** 2))
         RMS_in_seconden = RMS_in_samples / sample_frequency
-        # print(RMS_in_seconden)
         if RMS_in_seconden <= 0.02:
             return True
     return False
@@ -458,9 +455,6 @@ def stress_detection_ecg(peak_index, sample_frequency):
 
 def stress_detection_ppg(gefilterd_verkort_signaal, sample_frequency):
     peaks = signal.find_peaks(gefilterd_verkort_signaal, [-100, 100])
-    "die -100 tot 100?"
-    "nog een bron zoeken voor afstand tussen twee ppg pieken"
-    "mean NN ppg = 800 miliseconden -> zo oke?, beter wat lager nemen??"
     peak_index = peaks[0]
     if len(peak_index) >= 3:
         distance_between_peak = np.diff(peak_index)
@@ -603,16 +597,16 @@ class TitleScreen(Screen):
                 self.manager.get_screen('ECG').ids.colorBPM.color = [1, 1, 1, 1]
 
     def plot_ppg(self):
-        self.g = 0
+        self.a = 0
         Clock.schedule_interval(self.update_ppg_grafiek, 1/20)
 
     def update_ppg_grafiek(self, *args):
-        self.g += 1
+        self.a += 1
         sample_frequency = 100
         time_to_settle = 10
 
-        data_pre_filter_red = ppg_red[: 100 * self.g + 100]
-        data_pre_filter_ir = ppg_ir[: 100 * self.g + 100]
+        data_pre_filter_red = ppg_red[: 100 * self.a + 100]
+        data_pre_filter_ir = ppg_ir[: 100 * self.a + 100]
         filtered_signal_red_ac, filtered_signal_ir_ac, filtered_signal_red_dc, filtered_signal_ir_dc = ppg_filter(
             data_pre_filter_red, data_pre_filter_ir, sos_ac, sos_dc)
 
@@ -696,25 +690,25 @@ class TitleScreen(Screen):
     eda_waarde_getal = NumericProperty(0)
 
     def eda_waarde(self):
-        self.h = 0
-        self.l = 0
+        self.b = 0
+        self.c = 0
         Clock.schedule_interval(self.update_eda_waarde, 1/4)
 
     def update_eda_waarde(self, *args):
-        self.h += 1
+        self.b += 1
         time_to_settle = 10
         sample_frequency = 100
 
-        data_pre_filter = eda[: 100 * self.h + 100]
+        data_pre_filter = eda[: 100 * self.b + 100]
         data_post_filter = eda_filter(data_pre_filter, sos_lowpass_EDA)
         len_data_post_filter = len(data_post_filter)
 
         self.eda_waarde_getal = str(int(data_post_filter[-1]))
 
         if len_data_post_filter / sample_frequency > time_to_settle:
-            self.l += 1
-            if self.l >= 1:
-                signal_data_for_fit = data_post_filter[100 * (self.l - 1) + 100: 100 * self.l + 100]
+            self.c += 1
+            if self.c >= 1:
+                signal_data_for_fit = data_post_filter[100 * (self.c - 1) + 100: 100 * self.c + 100]
                 stress = stress_detection_eda(signal_data_for_fit, sample_frequency)
                 if stress is True:
                     self.manager.get_screen('main').ids.waardeEDA.text = str(self.eda_waarde_getal)
@@ -741,18 +735,7 @@ class TitleScreen(Screen):
 
 
 class MainScreen(Screen):
-
-    def plotPPG(self):
-        pass
-
-    def plotEDA(self):
-        pass
-
-    def waardeECG(self):
-        pass
-
-    def waardePPG(self):
-        pass
+    pass
 
 
 class ECGScreen(Screen):

@@ -16,8 +16,6 @@ ScreenManagement:
 
     RoundedButton1:
         text: 'Verder'
-        # background_normal: ''
-        # background_color: 0, 88/255, 143/255, 1
         size_hint: 0.2, 0.1
         font_size: self.width*0.15
         pos_hint: {"center_y": 0.12, "center_x":0.5}
@@ -121,7 +119,6 @@ ScreenManagement:
                     valign: 'middle'
                     background_color: 1, 1, 1, 0
                     on_release:
-                        root.plotPPG()
                         root.manager.current = 'PPG'
                         root.manager.transition.direction = 'left'
 
@@ -134,7 +131,6 @@ ScreenManagement:
                     valign: 'center'
                     background_color: 1, 1, 1, 0
                     on_release:
-                        root.plotPPG()
                         root.manager.current = 'PPG'
                         root.manager.transition.direction = 'left'
 
