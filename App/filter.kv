@@ -58,6 +58,7 @@ ScreenManagement:
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
+            size_hint: 1, 0.6
             orientation: 'horizontal'
             Image:
                 source: 'Heart-symbol.png'
@@ -96,6 +97,7 @@ ScreenManagement:
 
 
         BoxLayout:
+            size_hint: 1, 0.6
             orientation: 'horizontal'
             Image:
                 source: 'zuurstof.png'
@@ -136,6 +138,7 @@ ScreenManagement:
 
 
         BoxLayout:
+            size_hint: 1, 0.6
             orientation: 'horizontal'
             Image:
                 source: 'zweetdruppels.png'
@@ -173,14 +176,17 @@ ScreenManagement:
                         root.manager.transition.direction = 'left'
 
         RoundedButton2:
+            size_hint: 1, 0.09
             text: 'Ontspannen'
             color: 33/255, 90/255, 122/255
             size_hint: 0.15, 0.3
             font_size: self.width*0.15
-            pos_hint: {"center_y": 0.2, "center_x": 0.5}
+            pos_hint: {"center_x": 0.5, "center_y": 0.2}
             on_release:
                 import webbrowser
                 webbrowser.open('https://www.youtube.com/watch?v=lFcSrYw-ARY')
+        Label:
+            size_hint: 1, 0.03
 
 <RoundedButton2@Button>
     background_normal: ''

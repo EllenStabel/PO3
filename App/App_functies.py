@@ -537,7 +537,7 @@ time_eda = np.arange(0, len(eda) / sample_frequency, 1 / sample_frequency)
 class TitleScreen(Screen):
     def plot_ecg(self):
         self.k = 0
-        Clock.schedule_interval(self.update_ecg_grafiek, 1/40)
+        Clock.schedule_interval(self.update_ecg_grafiek, 1/60)
 
     def update_ecg_grafiek(self, *args):
         sample_frequency = 250
@@ -566,7 +566,7 @@ class TitleScreen(Screen):
 
     def ecg_waarde(self):
         self.m = 0
-        Clock.schedule_interval(self.update_ecg_waarde, 1 / 40)
+        Clock.schedule_interval(self.update_ecg_waarde, 1 / 60)
 
     def update_ecg_waarde(self, *args):
         sample_frequency = 250
@@ -636,7 +636,7 @@ class TitleScreen(Screen):
     def ppg_waarde(self):
         self.g = 0
         self.p = 0
-        Clock.schedule_interval(self.update_ppg_waarde, 1 / 20)
+        Clock.schedule_interval(self.update_ppg_waarde, 1/20)
 
     def update_ppg_waarde(self, *args):
         sample_frequency = 100
@@ -663,7 +663,7 @@ class TitleScreen(Screen):
     def plot_eda(self):
         self.h = 0
         self.l = 0
-        Clock.schedule_interval(self.update_eda_grafiek, 1 / 10)
+        Clock.schedule_interval(self.update_eda_grafiek, 1/4)
 
     def update_eda_grafiek(self,*args):
         sample_frequency = 100
@@ -693,7 +693,7 @@ class TitleScreen(Screen):
     def eda_waarde(self):
         self.h = 0
         self.l = 0
-        Clock.schedule_interval(self.update_eda_waarde, 1 / 20)
+        Clock.schedule_interval(self.update_eda_waarde, 1/4)
 
     def update_eda_waarde(self, *args):
         self.h += 1
