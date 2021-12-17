@@ -549,6 +549,7 @@ class TitleScreen(Screen):
 
         len_data_post_filter = len(data_post_filter)
 
+
         if len_data_post_filter / sample_frequency > time_to_settle_2:
             self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
             t_vals = [i / sample_frequency for i in range(len_data_post_filter)]
@@ -557,6 +558,8 @@ class TitleScreen(Screen):
             plt.plot(t_vals, data_post_filter)
             plt.xlim(t_vals[-1] - 1, t_vals[-1])
             plt.ylim(-1000, 1000)
+            plt.xlabel("Tijd [s]")
+            plt.ylabel("Amplitude")
             self.manager.get_screen('ECG').ids.grafiekECG.add_widget(FigureCanvasKivyAgg(self.fig1))
 
     ecg_waarde_getal = NumericProperty(0)
@@ -624,6 +627,8 @@ class TitleScreen(Screen):
             plt.plot(t_vals, filtered_signal_red_dc)
             plt.xlim(t_vals[-1] - 20, t_vals[-1])
             plt.ylim(min(filtered_signal_red_dc), max(filtered_signal_red_dc) * 1.1)
+            plt.xlabel("Tijd [s]")
+            plt.ylabel("Amplitude")
             self.manager.get_screen('PPG').ids.grafiekPPG.add_widget(FigureCanvasKivyAgg(self.fig2))
 
     ppg_waarde_getal = NumericProperty(0)
@@ -679,6 +684,8 @@ class TitleScreen(Screen):
             plt.plot(t_vals, data_post_filter)
             plt.xlim(t_vals[-1] - 20, t_vals[-1])
             plt.ylim(min(data_post_filter) * 1.1, max(data_post_filter) * 1.1)
+            plt.xlabel("Tijd [s]")
+            plt.ylabel("EDA [μS]")
             self.manager.get_screen('EDA').ids.grafiekEDA.add_widget(FigureCanvasKivyAgg(self.fig3))
 
     eda_waarde_getal = NumericProperty(0)

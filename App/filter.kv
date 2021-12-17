@@ -171,12 +171,13 @@ ScreenManagement:
                     on_release:
                         root.manager.current = 'EDA'
                         root.manager.transition.direction = 'left'
+
         RoundedButton2:
             text: 'Ontspannen'
             color: 33/255, 90/255, 122/255
             size_hint: 0.15, 0.3
             font_size: self.width*0.15
-            pos_hint: {"center_y": 0.3, "center_x": 0.5}
+            pos_hint: {"center_y": 0.2, "center_x": 0.5}
             on_release:
                 import webbrowser
                 webbrowser.open('https://www.youtube.com/watch?v=lFcSrYw-ARY')
