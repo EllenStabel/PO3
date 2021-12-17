@@ -531,11 +531,11 @@ time_eda = np.arange(0, len(eda) / sample_frequency, 1 / sample_frequency)
 class TitleScreen(Screen):
     def plot_ecg(self):
         self.k = 0
-        Clock.schedule_interval(self.update_ecg_grafiek, 1/100)
+        Clock.schedule_interval(self.update_ecg_grafiek, 1/60)
 
     def update_ecg_grafiek(self, *args):
         sample_frequency = 250
-        self.k += 1
+        self.k += 2
         time_to_settle_2 = 10
 
         data_pre_filter = ecg[: 10 * self.k + 10]
@@ -545,10 +545,10 @@ class TitleScreen(Screen):
 
         if len_data_post_filter / sample_frequency > time_to_settle_2:
             self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
-            t_vals = [i / sample_frequency for i in range(len_data_post_filter)]
+            t_vals = [i / sample_frequency for i in range(len_data_post_filter-300, len_data_post_filter)]
             self.fig1 = plt.figure(1)
             plt.cla()
-            plt.plot(t_vals[-300:], data_post_filter[-300:])
+            plt.plot(t_vals, data_post_filter[-300:])
             plt.xlim(t_vals[-1] - 1, t_vals[-1])
             plt.ylim(-1000, 1000)
             plt.xlabel("Tijd [s]")
@@ -559,11 +559,11 @@ class TitleScreen(Screen):
 
     def ecg_waarde(self):
         self.m = 0
-        Clock.schedule_interval(self.update_ecg_waarde, 1 / 100)
+        Clock.schedule_interval(self.update_ecg_waarde, 1 / 60)
 
     def update_ecg_waarde(self, *args):
         sample_frequency = 250
-        self.m += 1
+        self.m += 2
         time_to_settle_1 = 5
         time_to_settle_2 = 10
 
