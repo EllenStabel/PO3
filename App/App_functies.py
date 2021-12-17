@@ -549,7 +549,6 @@ class TitleScreen(Screen):
 
         len_data_post_filter = len(data_post_filter)
 
-
         if len_data_post_filter / sample_frequency > time_to_settle_2:
             self.manager.get_screen('ECG').ids.grafiekECG.clear_widgets()
             t_vals = [i / sample_frequency for i in range(len_data_post_filter)]
@@ -656,9 +655,15 @@ class TitleScreen(Screen):
                 signal_data_for_stress_detection = data_pre_filter_red[100 * (self.p - 1) + 100: 100 * self.p + 100]
                 stress = stress_detection_ppg(signal_data_for_stress_detection, sample_frequency)
                 if stress is True:
-                    print("jij hebt stress")
+                    self.manager.get_screen('main').ids.colorPPG_eenheid.color = [1, 0, 0, 1]
+                    self.manager.get_screen('main').ids.waardePPG.color = [1, 0, 0, 1]
+                    self.manager.get_screen('PPG').ids.colorPPG_eenheid.color = [1, 0, 0, 1]
+                    self.manager.get_screen('PPG').ids.waardePPG.color = [1, 0, 0, 1]
                 else:
-                    print("jij hebt geen stress")
+                    self.manager.get_screen('main').ids.colorPPG_eenheid.color = [1, 1, 1, 1]
+                    self.manager.get_screen('main').ids.waardePPG.color = [1, 1, 1, 1]
+                    self.manager.get_screen('PPG').ids.colorPPG_eenheid.color = [1, 1, 1, 1]
+                    self.manager.get_screen('PPG').ids.waardePPG.color = [1, 1, 1, 1]
 
     def plot_eda(self):
         self.h = 0

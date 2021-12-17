@@ -29,6 +29,7 @@ ScreenManagement:
             root.plot_ppg()
             root.plot_eda()
             root.ecg_waarde()
+            root.ppg_waarde()
             root.eda_waarde()
 
 
@@ -112,7 +113,8 @@ ScreenManagement:
 
             BoxLayout:
                 Button:
-                    text: '96'
+                    id: waardePPG
+                    text: '97'
                     text_size: self.width, self.height
                     font_size: self.width*0.35
                     halign: 'right'
@@ -124,7 +126,7 @@ ScreenManagement:
                         root.manager.transition.direction = 'left'
 
                 Button:
-                    id: color%
+                    id: colorPPG_eenheid
                     text: '%'
                     text_size: self.width- dp(10), self.height- dp(10)
                     font_size: self.width*0.2
@@ -314,7 +316,7 @@ ScreenManagement:
                     halign: 'right'
                     valign: 'middle'
                 Label:
-                    id: color%
+                    id: colorPPG_eenheid
                     size_hint: 0.3, 1
                     text: '%'
                     text_size: self.width, self.height
