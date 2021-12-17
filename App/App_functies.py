@@ -11,6 +11,7 @@ from scipy import signal, misc
 import numpy as np
 import math
 import statistics
+from itertools import count
 
 
 """
@@ -400,6 +401,7 @@ def decryption(to_decrypt1, keyVal=3000, tag_given=[]): # to_decrypt1 ipv data_t
 # ONS DEEL #
 ############
 
+
 def initialise_filters_ecg(sample_frequency, baseline_cutoff_frequency, powerline_cutoff_frequency_1,
                            powerline_cutoff_frequency_2, lowpass_cutoff_frequency, order):
     sos_baseline = signal.butter(order, baseline_cutoff_frequency, btype='high', output='sos', fs=sample_frequency)
@@ -448,7 +450,7 @@ def stress_detection_ecg(peak_index, sample_frequency):
         difference_in_distance_between_peak = np.diff(distance_between_peak)
         RMS_in_samples = math.sqrt(np.mean(np.array(difference_in_distance_between_peak) ** 2))
         RMS_in_seconden = RMS_in_samples / sample_frequency
-        print(RMS_in_seconden)
+        # print(RMS_in_seconden)
         if RMS_in_seconden <= 0.02:
             return True
     return False
@@ -510,11 +512,10 @@ def calculate_heartbeat(data_post_filter, R_median, sample_frequency):
 ecg = np.loadtxt(r'ecgvanjanne.txt', delimiter=',')
 ecg = ecg[0:10000]
 
-sos_baseline, sos_powerline, sos_lowpass = initialise_filters_ecg(250, 0.5, 49, 51, 100, 4)
+sos_baseline, sos_powerline, sos_lowpass_ECG = initialise_filters_ecg(250, 0.5, 49, 51, 100, 4)
 
 x_vals = []
 y_vals = []
-
 
 # initialisatie: visualisatie PPG
 ppg_red = np.loadtxt(r'ppg_red.txt')
@@ -527,7 +528,7 @@ sos_ac, sos_dc = initialise_filters_ppg(100, 0.5, 5, 0.1, 40, 4)
 eda = np.loadtxt(r'myData.txt')
 sample_frequency = 100
 
-sos_lowpass = signal.butter(6, 5, btype='low', output='sos', fs=sample_frequency)
+sos_lowpass_EDA = signal.butter(6, 5, btype='low', output='sos', fs=sample_frequency)
 
 # eda = signal.sosfilt(sos_lowpass, eda)
 time_eda = np.arange(0, len(eda) / sample_frequency, 1 / sample_frequency)
@@ -544,7 +545,7 @@ class TitleScreen(Screen):
         time_to_settle_2 = 10
 
         data_pre_filter = ecg[: 10 * self.k + 10]
-        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
+        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass_ECG)
 
         len_data_post_filter = len(data_post_filter)
 
@@ -571,7 +572,7 @@ class TitleScreen(Screen):
         time_to_settle_2 = 10
 
         data_pre_filter = ecg[: 10 * self.m + 10]
-        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass)
+        data_post_filter = ecg_filter(data_pre_filter, sos_baseline, sos_powerline, sos_lowpass_ECG)
 
         len_data_post_filter = len(data_post_filter)
 
@@ -665,7 +666,7 @@ class TitleScreen(Screen):
         time_to_settle = 10
 
         data_pre_filter = eda[: 100 * self.h + 100]
-        data_post_filter = eda_filter(data_pre_filter, sos_lowpass)
+        data_post_filter = eda_filter(data_pre_filter, sos_lowpass_EDA)
 
         len_data_post_filter = len(data_post_filter)
 
@@ -693,7 +694,7 @@ class TitleScreen(Screen):
         sample_frequency = 100
 
         data_pre_filter = eda[: 100 * self.h + 100]
-        data_post_filter = eda_filter(data_pre_filter, sos_lowpass)
+        data_post_filter = eda_filter(data_pre_filter, sos_lowpass_EDA)
         len_data_post_filter = len(data_post_filter)
 
         self.eda_waarde_getal = str(int(data_post_filter[-1]))
