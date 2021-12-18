@@ -578,10 +578,10 @@ class TitleScreen(Screen):
                 sample_frequency)
             heartbeat, peak_index, peak_amplitude = calculate_heartbeat(data_post_filter, R_median=median_peak,
                                                                         sample_frequency=250)
-            stress = stress_detection_ecg(data_post_filter, sample_frequency)
+            self.stress_ecg = stress_detection_ecg(data_post_filter, sample_frequency)
             self.ecg_waarde_getal = str(int(heartbeat))
 
-            if stress is True:
+            if self.stress_ecg is True:
                 self.manager.get_screen('main').ids.waardeECG.text = str(self.ecg_waarde_getal)
                 self.manager.get_screen('main').ids.waardeECG.color = [1, 0, 0, 1]
                 self.manager.get_screen('main').ids.colorBPM.color = [1, 0, 0, 1]
@@ -595,6 +595,8 @@ class TitleScreen(Screen):
                 self.manager.get_screen('ECG').ids.waardeECG.text = str(self.ecg_waarde_getal)
                 self.manager.get_screen('ECG').ids.waardeECG.color = [1, 1, 1, 1]
                 self.manager.get_screen('ECG').ids.colorBPM.color = [1, 1, 1, 1]
+
+            return self.stress_ecg
 
     def plot_ppg(self):
         self.a = 0
@@ -647,8 +649,8 @@ class TitleScreen(Screen):
             self.p += 1
             if self.p >= 1:
                 signal_data_for_stress_detection = data_pre_filter_red[100 * (self.p - 1) + 100: 100 * self.p + 100]
-                stress = stress_detection_ppg(signal_data_for_stress_detection, sample_frequency)
-                if stress is True:
+                self.stress_ppg = stress_detection_ppg(signal_data_for_stress_detection, sample_frequency)
+                if self.stress_ppg is True:
                     self.manager.get_screen('main').ids.colorPPG_eenheid.color = [1, 0, 0, 1]
                     self.manager.get_screen('main').ids.waardePPG.color = [1, 0, 0, 1]
                     self.manager.get_screen('PPG').ids.colorPPG_eenheid.color = [1, 0, 0, 1]
@@ -658,6 +660,7 @@ class TitleScreen(Screen):
                     self.manager.get_screen('main').ids.waardePPG.color = [1, 1, 1, 1]
                     self.manager.get_screen('PPG').ids.colorPPG_eenheid.color = [1, 1, 1, 1]
                     self.manager.get_screen('PPG').ids.waardePPG.color = [1, 1, 1, 1]
+                return self.stress_ppg
 
     def plot_eda(self):
         self.h = 0
@@ -709,8 +712,8 @@ class TitleScreen(Screen):
             self.c += 1
             if self.c >= 1:
                 signal_data_for_fit = data_post_filter[100 * (self.c - 1) + 100: 100 * self.c + 100]
-                stress = stress_detection_eda(signal_data_for_fit, sample_frequency)
-                if stress is True:
+                self.stress_eda = stress_detection_eda(signal_data_for_fit, sample_frequency)
+                if self.stress_eda is True:
                     self.manager.get_screen('main').ids.waardeEDA.text = str(self.eda_waarde_getal)
                     self.manager.get_screen('main').ids.waardeEDA.color = [1, 0, 0, 1]
                     self.manager.get_screen('main').ids.colorV.color = [1, 0, 0, 1]
@@ -726,6 +729,21 @@ class TitleScreen(Screen):
                     self.manager.get_screen('EDA').ids.waardeEDA.text = str(self.eda_waarde_getal)
                     self.manager.get_screen('EDA').ids.waardeEDA.color = [1, 1, 1, 1]
                     self.manager.get_screen('EDA').ids.colorV.color = [1, 1, 1, 1]
+                return self.stress_eda
+
+    def kleur_knop(self):
+        Clock.schedule_interval(self.update_kleur_knop, 1 / 4)
+
+    def update_kleur_knop(self, *args):
+        stress_ecg = self.update_ecg_waarde()
+        stress_ppg = self.update_ppg_waarde()
+        stress_eda = self.update_eda_waarde()
+
+        if stress_ecg == True and stress_ppg == True or stress_ecg == True and stress_eda == True or stress_ppg == True\
+                and stress_eda == True or stress_ecg == True and stress_ppg == True and stress_eda == True:
+            self.manager.get_screen('main').ids.ontspan_knop.background_color = [1, 0, 0, 1]
+        else:
+            self.manager.get_screen('main').ids.ontspan_knop.background_color = [1, 1, 1, 1]
 
     '''
     def leeftijd_save(self):
