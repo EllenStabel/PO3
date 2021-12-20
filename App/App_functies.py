@@ -512,8 +512,8 @@ x_vals = []
 y_vals = []
 
 # initialisatie: visualisatie PPG
-ppg_red = np.loadtxt(r'ppg_red.txt')
-ppg_ir = np.loadtxt(r'ppg_ir.txt')
+ppg_red = np.loadtxt(r'ppgredgoed.txt')
+ppg_ir = np.loadtxt(r'ppginfraredgoed.txt')
 
 sos_ac, sos_dc = initialise_filters_ppg(100, 0.5, 5, 0.1, 40, 4)
 
@@ -645,19 +645,28 @@ class TitleScreen(Screen):
 
         len_data_post_filter = len(filtered_signal_red_ac)
 
-        if len_data_post_filter / sample_frequency > time_to_settle:
+        if len_data_post_filter / sample_frequency > 0:
             self.p += 1
             if self.p >= 1:
                 signal_data_for_stress_detection = data_pre_filter_red[100 * (self.p - 1) + 100: 100 * self.p + 100]
                 self.stress_ppg = stress_detection_ppg(signal_data_for_stress_detection, sample_frequency)
+                blood_oxygen_saturation = 89 * (np.sqrt(np.mean(np.array(filtered_signal_red_ac) ** 2)) / np.sqrt(
+                    np.mean(np.array(filtered_signal_red_dc) ** 2))) / (
+                                                  np.sqrt(np.mean(np.array(filtered_signal_ir_ac) ** 2)) / np.sqrt(
+                                              np.mean(np.array(filtered_signal_ir_dc) ** 2)))
+                self.ppg_waarde_getal = str(int(blood_oxygen_saturation))
                 if self.stress_ppg is True:
+                    self.manager.get_screen('main').ids.waardePPG.text = str(self.ppg_waarde_getal)
                     self.manager.get_screen('main').ids.colorPPG_eenheid.color = [1, 0, 0, 1]
                     self.manager.get_screen('main').ids.waardePPG.color = [1, 0, 0, 1]
+                    self.manager.get_screen('PPG').ids.waardePPG.text = str(self.ppg_waarde_getal)
                     self.manager.get_screen('PPG').ids.colorPPG_eenheid.color = [1, 0, 0, 1]
                     self.manager.get_screen('PPG').ids.waardePPG.color = [1, 0, 0, 1]
                 else:
+                    self.manager.get_screen('main').ids.waardePPG.text = str(self.ppg_waarde_getal)
                     self.manager.get_screen('main').ids.colorPPG_eenheid.color = [1, 1, 1, 1]
                     self.manager.get_screen('main').ids.waardePPG.color = [1, 1, 1, 1]
+                    self.manager.get_screen('PPG').ids.waardePPG.text = str(self.ppg_waarde_getal)
                     self.manager.get_screen('PPG').ids.colorPPG_eenheid.color = [1, 1, 1, 1]
                     self.manager.get_screen('PPG').ids.waardePPG.color = [1, 1, 1, 1]
                 return self.stress_ppg
