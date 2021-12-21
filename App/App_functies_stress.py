@@ -448,7 +448,7 @@ def stress_detection_ecg(peak_index, sample_frequency):
         difference_in_distance_between_peak = np.diff(distance_between_peak)
         RMS_in_samples = math.sqrt(np.mean(np.array(difference_in_distance_between_peak) ** 2))
         RMS_in_seconden = RMS_in_samples / sample_frequency
-        if RMS_in_seconden <= 0.02:
+        if RMS_in_seconden <= 0.075:
             return True
     return False
 
@@ -464,8 +464,8 @@ def stress_detection_ppg(gefilterd_verkort_signaal, sample_frequency):
         if 0.018 <= RMS_in_seconden <= 0.045:
             return False
         else:
-            return True
-    return False
+            return False
+    return True
 
 
 def stress_detection_eda(gefilterd_verkort_signaal, sample_frequency):
@@ -474,7 +474,7 @@ def stress_detection_eda(gefilterd_verkort_signaal, sample_frequency):
     peak_amplitude = peaks[1]['peak_heights']
     if len(peak_index) >= 5:
         p = np.polyfit(np.array(peak_index) / sample_frequency, peak_amplitude, 1)
-        if p[0] > 0.176:
+        if p[0] > -0.5:
             return True
     return False
 
@@ -789,12 +789,12 @@ class image(Image):
     pass
 
 
-bestand = Builder.load_file("filter.kv")
+bestand = Builder.load_file("stress.kv")
 
 
-class FilterApp(App):
+class StressApp(App):
     def build(self):
         return bestand
 
 
-FilterApp().run()
+StressApp().run()

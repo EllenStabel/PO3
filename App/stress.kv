@@ -1,0 +1,390 @@
+ScreenManagement:
+    TitleScreen:
+    MainScreen:
+    ECGScreen:
+    PPGScreen:
+    EDAScreen:
+
+
+<TitleScreen>
+    name: 'title'
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Logo_nieuw.png'
+
+    RoundedButton1:
+        text: 'Verder'
+        size_hint: 0.2, 0.1
+        font_size: self.width*0.15
+        pos_hint: {"center_x":0.5, "center_y": 0.25}
+
+        on_release:
+            root.manager.current = 'main'
+            root.manager.transition.direction = 'left'
+            root.plot_ecg()
+            root.plot_ppg()
+            root.plot_eda()
+            root.ecg_waarde()
+            root.ppg_waarde()
+            root.eda_waarde()
+            root.kleur_knop()
+
+
+<RoundedButton1@Button>
+    background_normal: ''
+    background_color: (0,0,0,0)
+    canvas.before:
+        Color:
+            rgb: 33/255, 90/255, 122/255
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [15]
+
+
+<MainScreen@Screen>
+    name: 'main'
+    canvas.before:
+        Color:
+            rgb: (0, 88/255, 143/255)
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint: 1, 0.6
+            orientation: 'horizontal'
+            Image:
+                source: 'Heart-symbol.png'
+                allow_stretch: True
+                keep_ratio: True
+                size_hint: (0.35, 0.35)
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+            Label:
+                text: 'ECG'
+                font_size: self.width*0.45
+                size_hint: (0.3, 1)
+            BoxLayout:
+                Button:
+                    id: waardeECG
+                    text_size: self.width, self.height
+                    font_size: self.width*0.35
+                    halign: 'right'
+                    valign: 'middle'
+                    background_color: 1, 1, 1, 0
+                    on_release:
+                        root.manager.current = 'ECG'
+                        root.manager.transition.direction = 'left'
+
+                Button:
+                    id: colorBPM
+                    text: 'BPM'
+                    text_size: self.width - dp(10), self.height - dp(10)
+                    font_size: self.width*0.2
+                    halign: 'left'
+                    valign: 'center'
+                    background_color: 1, 1, 1, 0
+                    on_release:
+                        root.manager.current = 'ECG'
+                        root.manager.transition.direction = 'left'
+
+
+        BoxLayout:
+            size_hint: 1, 0.6
+            orientation: 'horizontal'
+            Image:
+                source: 'zuurstof.png'
+                allow_stretch: True
+                keep_ratio: True
+                size_hint: (0.35, 0.35)
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            Label:
+                text: 'PPG'
+                font_size: self.width*0.45
+                size_hint: (0.3, 1)
+
+            BoxLayout:
+                Button:
+                    id: waardePPG
+                    # text: '97'
+                    text_size: self.width, self.height
+                    font_size: self.width*0.35
+                    halign: 'right'
+                    valign: 'middle'
+                    background_color: 1, 1, 1, 0
+                    on_release:
+                        root.manager.current = 'PPG'
+                        root.manager.transition.direction = 'left'
+
+                Button:
+                    id: colorPPG_eenheid
+                    text: '%'
+                    text_size: self.width- dp(10), self.height- dp(10)
+                    font_size: self.width*0.2
+                    halign: 'left'
+                    valign: 'center'
+                    background_color: 1, 1, 1, 0
+                    on_release:
+                        root.manager.current = 'PPG'
+                        root.manager.transition.direction = 'left'
+
+
+        BoxLayout:
+            size_hint: 1, 0.6
+            orientation: 'horizontal'
+            Image:
+                source: 'zweetdruppels.png'
+                allow_stretch: True
+                keep_ratio: True
+                size_hint: (0.35, 0.35)
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            Label:
+                text: 'EDA'
+                font_size: self.width*0.45
+                size_hint: (0.3, 1)
+            BoxLayout:
+                Button:
+                    id: waardeEDA
+                    text_size: self.width, self.height
+                    font_size: self.width*0.35
+                    halign: 'right'
+                    valign: 'middle'
+                    background_color: 1, 1, 1, 0
+                    on_release:
+                        root.manager.current = 'EDA'
+                        root.manager.transition.direction = 'left'
+
+                Button:
+                    id: colorV
+                    text: 'μS'
+                    text_size: self.width- dp(10), self.height- dp(10)
+                    font_size: self.width*0.2
+                    halign: 'left'
+                    valign: 'center'
+                    background_color: 1, 1, 1, 0
+                    on_release:
+                        root.manager.current = 'EDA'
+                        root.manager.transition.direction = 'left'
+
+        RoundedButton2:
+            id: ontspan_knop
+            size_hint: 1, 0.09
+            text: 'Ontspannen'
+            color: 33/255, 90/255, 122/255
+            size_hint: 0.15, 0.3
+            font_size: self.width*0.15
+            pos_hint: {"center_x": 0.5, "center_y": 0.2}
+            on_release:
+                import webbrowser
+                webbrowser.open('https://www.youtube.com/watch?v=lFcSrYw-ARY')
+        Label:
+            size_hint: 1, 0.03
+
+<RoundedButton2@Button>
+    background_normal: ''
+    background_color: (0,0,0,0)
+    canvas.before:
+        Color:
+            rgb: 1, 1, 1
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [15]
+
+
+<ECGScreen@Screen>
+    name: 'ECG'
+    canvas.before:
+        Color:
+            rgb: (0, 88/255, 143/255)
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Label:
+        text: 'ECG'
+        size: "100dp","100dp"
+        font_size: self.width*0.1
+        pos_hint: {"center_y": 0.9}
+        color: 1, 1, 1, 1
+    BoxLayout:
+        size_hint: 0.15, 0.045
+        pos_hint: {"left":0.9, "top":0.98}
+        Image:
+            source: 'terugknop2.png'
+            allow_stretch: True
+            keep_ratio: True
+            size_hint: (0.15, 0.6)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        Button:
+            text: "Overzicht"
+            background_color: 1, 1, 1, 0
+            size_hint: (0.85, 1)
+            text_size: self.size
+            font_size: self.width*0.2
+            pos_hint: {"left":0.9, "top":1}
+            on_release:
+                root.verwijderenECG()
+                root.manager.current = 'main'
+                root.manager.transition.direction = 'right'
+    AnchorLayout:
+        anchor_x: "center"
+        anchor_y: "center"
+        BoxLayout:
+            size_hint: 1, .6
+            BoxLayout:
+                size_hint: 0.3, 1
+                Label:
+                    id: waardeECG
+                    size_hint: 0.75, 1
+                    text_size: self.width, self.height
+                    font_size: self.width*0.4
+                    halign: 'right'
+                    valign: 'middle'
+                Label:
+                    id: colorBPM
+                    size_hint: 0.25, 1
+                    text: 'BPM'
+                    text_size: self.width, self.height
+                    font_size: self.width*0.4
+                    halign: 'left'
+                    valign: 'center'
+            BoxLayout:
+                id: grafiekECG
+                size_hint: 0.7, 1
+
+<PPGScreen>
+    name: 'PPG'
+    canvas.before:
+        Color:
+            rgb: (0, 88/255, 143/255)
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Label:
+        text: 'PPG'
+        size: "100dp","100dp"
+        font_size: self.width*0.1
+        pos_hint: {"center_y": 0.9}
+        color: 1, 1, 1, 1
+    BoxLayout:
+        size_hint: 0.15, 0.045
+        pos_hint: {"left":0.9, "top":0.98}
+        Image:
+            source: 'terugknop2.png'
+            allow_stretch: True
+            keep_ratio: True
+            size_hint: (0.15, 0.6)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        Button:
+            text: "Overzicht"
+            background_color: 1, 1, 1, 0
+            size_hint: (0.85, 1)
+            text_size: self.size
+            font_size: self.width*0.2
+            pos_hint: {"left":0.9, "top":1}
+            on_release:
+                root.verwijderenPPG()
+                root.manager.current = 'main'
+                root.manager.transition.direction = 'right'
+    AnchorLayout:
+        anchor_x: "center"
+        anchor_y: "center"
+        BoxLayout:
+            size_hint: 1, .5
+            BoxLayout:
+                size_hint: 0.3, 1
+                Label:
+                    id: waardePPG
+                    # text: '97.0'
+                    size_hint: 0.7, 1
+                    text_size: self.width, self.height
+                    font_size: self.width*0.5
+                    halign: 'right'
+                    valign: 'middle'
+                Label:
+                    id: colorPPG_eenheid
+                    size_hint: 0.3, 1
+                    text: '%'
+                    text_size: self.width, self.height
+                    font_size: self.width*0.5
+                    halign: 'left'
+                    valign: 'center'
+            BoxLayout:
+                id: grafiekPPG
+                size_hint: 0.7, 1
+
+<EDAScreen>
+    name: 'EDA'
+    canvas.before:
+        Color:
+            rgb: (0, 88/255, 143/255)
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Label:
+        text: 'EDA'
+        size: "100dp","100dp"
+        font_size: self.width*0.1
+        pos_hint: {"center_y": 0.9}
+        color: 1, 1, 1, 1
+
+    BoxLayout:
+        size_hint: 0.15, 0.045
+        pos_hint: {"left":0.9, "top":0.98}
+        Image:
+            source: 'terugknop2.png'
+            allow_stretch: True
+            keep_ratio: True
+            size_hint: (0.15, 0.6)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        Button:
+            text: "Overzicht"
+            background_color: 1, 1, 1, 0
+            size_hint: (0.85, 1)
+            text_size: self.size
+            font_size: self.width*0.2
+            pos_hint: {"left":0.9, "top":1}
+            on_release:
+                root.verwijderenEDA()
+                root.manager.current = 'main'
+                root.manager.transition.direction = 'right'
+
+
+    AnchorLayout:
+        anchor_x: "center"
+        anchor_y: "center"
+        BoxLayout:
+            size_hint: 1, .5
+            BoxLayout:
+                size_hint: 0.3, 1
+                Label:
+                    id: waardeEDA
+                    size_hint: 0.7, 1
+                    text_size: self.width, self.height
+                    font_size: self.width*0.5
+                    halign: 'right'
+                    valign: 'middle'
+                Label:
+                    id: colorV
+                    size_hint: 0.3, 1
+                    text: 'μS'
+                    text_size: self.width, self.height
+                    font_size: self.width*0.5
+                    halign: 'left'
+                    valign: 'center'
+            BoxLayout:
+                id: grafiekEDA
+                size_hint: 0.7, 1
