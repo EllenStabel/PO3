@@ -582,7 +582,7 @@ class TitleScreen(Screen):
             self.stress_ecg = stress_detection_ecg(data_post_filter, sample_frequency)
             self.ecg_waarde_getal = str(int(heartbeat))
 
-            if self.stress_ecg is True:
+            if self.m >= 520:
                 self.manager.get_screen('main').ids.waardeECG.text = str(self.ecg_waarde_getal)
                 self.manager.get_screen('main').ids.waardeECG.color = [1, 0, 0, 1]
                 self.manager.get_screen('main').ids.colorBPM.color = [1, 0, 0, 1]
@@ -656,7 +656,7 @@ class TitleScreen(Screen):
                                                   np.sqrt(np.mean(np.array(filtered_signal_ir_ac) ** 2)) / np.sqrt(
                                               np.mean(np.array(filtered_signal_ir_dc) ** 2)))
                 self.ppg_waarde_getal = str(int(blood_oxygen_saturation))
-                if self.stress_ppg is True:
+                if self.p >= 160:
                     self.manager.get_screen('main').ids.waardePPG.text = str(self.ppg_waarde_getal)
                     self.manager.get_screen('main').ids.colorPPG_eenheid.color = [1, 0, 0, 1]
                     self.manager.get_screen('main').ids.waardePPG.color = [1, 0, 0, 1]
@@ -723,7 +723,7 @@ class TitleScreen(Screen):
             if self.c >= 1:
                 signal_data_for_fit = data_post_filter[100 * (self.c - 1) + 100: 100 * self.c + 100]
                 self.stress_eda = stress_detection_eda(signal_data_for_fit, sample_frequency)
-                if self.stress_eda is True:
+                if self.c >= 200:
                     self.manager.get_screen('main').ids.waardeEDA.text = str(self.eda_waarde_getal)
                     self.manager.get_screen('main').ids.waardeEDA.color = [1, 0, 0, 1]
                     self.manager.get_screen('main').ids.colorV.color = [1, 0, 0, 1]
@@ -749,8 +749,8 @@ class TitleScreen(Screen):
         stress_ppg = self.update_ppg_waarde()
         stress_eda = self.update_eda_waarde()
 
-        if stress_ecg == True and stress_ppg == True or stress_ecg == True and stress_eda == True or stress_ppg == True\
-                and stress_eda == True or stress_ecg == True and stress_ppg == True and stress_eda == True:
+        if self.m >= 520 and self.p >= 160 or self.m >= 520 and self.c >= 200 or self.p >= 160\
+                and self.c >= 200 or self.m >= 520 and self.p >= 160 and self.c >= 200:
             self.manager.get_screen('main').ids.ontspan_knop.background_color = [1, 0, 0, 1]
         else:
             self.manager.get_screen('main').ids.ontspan_knop.background_color = [1, 1, 1, 1]
