@@ -693,7 +693,7 @@ class TitleScreen(Screen):
             t_vals = [i / sample_frequency for i in range(len_data_post_filter)]
             self.fig3 = plt.figure(3)
             plt.cla()
-            plt.plot(t_vals, data_post_filter)
+            plt.plot(t_vals[-2000:], data_post_filter[-2000:])
             plt.xlim(t_vals[-1] - 20, t_vals[-1])
             plt.ylim(min(data_post_filter) * 1.1, max(data_post_filter) * 1.1)
             plt.xlabel("Tijd [s]")

@@ -497,7 +497,7 @@ def calculate_heartbeat(data_post_filter, R_median, sample_frequency):
     peak_index = peaks[0]
     peak_amplitude = peaks[1]['peak_heights']
     if len(peak_index) >= 2:
-        heartbeat = (peak_index[-1] - peak_index[-2]) / sample_frequency * 60
+        heartbeat = sample_frequency / (peak_index[-1] - peak_index[-2]) * 60
         return heartbeat, peak_index, peak_amplitude
     else:
         return 0, peak_index, peak_amplitude
